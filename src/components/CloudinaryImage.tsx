@@ -12,7 +12,7 @@ interface CloudinaryImageProps {
   priority?: boolean;
   quality?: number;
   crop?: 'fill' | 'scale' | 'fit' | 'thumb';
-  placeholder?: 'blur' | 'empty';
+  placeholder?: 'empty';
   blurDataURL?: string;
 }
 
@@ -25,7 +25,7 @@ export default function CloudinaryImage({
   priority = false,
   quality = 80,
   crop = 'fill',
-  placeholder = 'blur',
+  placeholder = 'empty',
   blurDataURL
 }: CloudinaryImageProps) {
   const [isLoading, setIsLoading] = useState(true);
@@ -96,6 +96,7 @@ export function ProductImage({ src, alt, className = '' }: { src: string; alt: s
       className={`object-cover rounded-lg ${className}`}
       crop="fill"
       quality={85}
+      placeholder="empty"
     />
   );
 }
@@ -112,6 +113,7 @@ export function HeroImage({ src, alt, className = '' }: { src: string; alt: stri
       crop="fill"
       quality={90}
       priority={true}
+      placeholder="empty"
     />
   );
 }
@@ -127,6 +129,7 @@ export function ThumbnailImage({ src, alt, className = '' }: { src: string; alt:
       className={`object-cover rounded ${className}`}
       crop="thumb"
       quality={70}
+      placeholder="empty"
     />
   );
 } 

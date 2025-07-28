@@ -14,6 +14,7 @@ export default function HeroBanner() {
           fill
           className="object-cover"
           priority
+          placeholder="empty"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-gray-800/20 to-gray-900/20"></div>
       </div>

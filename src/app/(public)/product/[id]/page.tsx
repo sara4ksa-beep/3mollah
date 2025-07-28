@@ -43,6 +43,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 fill
                 className="object-cover rounded-lg"
                 sizes="(max-width: 768px) 100vw, 50vw"
+                placeholder="empty"
               />
             </div>
 
