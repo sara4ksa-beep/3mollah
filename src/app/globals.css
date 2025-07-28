@@ -1,0 +1,417 @@
+@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  
+  /* Font Variables */
+  --font-cairo: 'Cairo', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  font-family: var(--font-cairo), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom styles for the commission sales website */
+.product-card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  font-family: var(--font-cairo);
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.social-icon {
+  transition: transform 0.2s ease-in-out;
+  font-family: var(--font-cairo);
+}
+
+.social-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Button typography */
+.btn-primary {
+  font-family: var(--font-cairo);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.btn-secondary {
+  font-family: var(--font-cairo);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+
+/* Form typography */
+.form-label {
+  font-family: var(--font-cairo);
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.form-input {
+  font-family: var(--font-cairo);
+  font-size: 0.875rem;
+}
+
+/* Navigation typography */
+.nav-link {
+  font-family: var(--font-cairo);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+
+.nav-link:hover {
+  font-weight: 600;
+}
+
+/* Font Classes */
+.font-cairo {
+  font-family: var(--font-cairo);
+}
+
+.font-inter {
+  font-family: var(--font-inter);
+}
+
+.font-poppins {
+  font-family: var(--font-poppins);
+}
+
+/* Typography Utilities */
+.text-heading {
+  font-family: var(--font-cairo);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-rendering: optimizeLegibility;
+}
+
+.text-subheading {
+  font-family: var(--font-cairo);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-rendering: optimizeLegibility;
+}
+
+.text-body {
+  font-family: var(--font-cairo);
+  font-weight: 400;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+.text-caption {
+  font-family: var(--font-inter);
+  font-weight: 400;
+  font-size: 0.875rem;
+  text-rendering: optimizeLegibility;
+}
+
+/* Arabic Text Specific */
+.text-arabic {
+  font-family: var(--font-cairo);
+  font-feature-settings: 'liga' 1, 'kern' 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* English Text Specific */
+.text-english {
+  font-family: var(--font-inter);
+  font-feature-settings: 'liga' 1, 'kern' 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* Arabic text optimization */
+.text-arabic-optimized {
+  font-family: var(--font-cairo);
+  font-feature-settings: 'liga' 1, 'kern' 1, 'calt' 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Additional Typography Improvements */
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Smooth font loading */
+.font-smooth {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom font weights for Arabic */
+.font-thin-arabic {
+  font-family: var(--font-cairo);
+  font-weight: 100;
+}
+
+.font-light-arabic {
+  font-family: var(--font-cairo);
+  font-weight: 300;
+}
+
+.font-normal-arabic {
+  font-family: var(--font-cairo);
+  font-weight: 400;
+}
+
+.font-medium-arabic {
+  font-family: var(--font-cairo);
+  font-weight: 500;
+}
+
+.font-semibold-arabic {
+  font-family: var(--font-cairo);
+  font-weight: 600;
+}
+
+.font-bold-arabic {
+  font-family: var(--font-cairo);
+  font-weight: 700;
+}
+
+.font-extrabold-arabic {
+  font-family: var(--font-cairo);
+  font-weight: 800;
+}
+
+.font-black-arabic {
+  font-family: var(--font-cairo);
+  font-weight: 900;
+}
+
+/* Responsive typography */
+@media (max-width: 768px) {
+  .text-heading {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  
+  .text-subheading {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  
+  .text-body {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .text-heading {
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+  }
+  
+  .text-subheading {
+    font-size: 1rem;
+    line-height: 1.25rem;
+  }
+  
+  .text-body {
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .text-heading,
+  .text-subheading,
+  .text-body {
+    font-weight: 700;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .product-card,
+  .social-icon {
+    transition: none;
+  }
+}
+
+/* Dark mode support for typography */
+@media (prefers-color-scheme: dark) {
+  .text-heading,
+  .text-subheading,
+  .text-body {
+    color: #f3f4f6;
+  }
+  
+  .text-caption {
+    color: #9ca3af;
+  }
+  
+  /* إصلاح لون النص في حقول الإدخال في الوضع المظلم */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  input[type="date"],
+  input[type="time"],
+  input[type="datetime-local"],
+  input[type="month"],
+  input[type="week"],
+  textarea,
+  select {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+}
+
+/* فرض اللون الرمادي الغامق للنصوص الرئيسية في الوضع الفاتح */
+.text-heading,
+.text-subheading,
+.text-body,
+.text-caption {
+  color: #27272a;
+}
+
+/* إصلاح لون النص في حقول الإدخال */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+textarea,
+select {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+
+/* إضافة text-black لجميع حقول الإدخال في التطبيق */
+input,
+textarea,
+select {
+  @apply text-black;
+  color: #000000 !important;
+}
+
+/* إصلاح لون النص في حقول الإدخال في جميع المتصفحات */
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #6b7280 !important;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: #6b7280 !important;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: #6b7280 !important;
+}
+
+/* إصلاح لون النص في حقول الإدخال عند التركيز */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="datetime-local"]:focus,
+input[type="month"]:focus,
+input[type="week"]:focus,
+textarea:focus,
+select:focus {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+
+/* إصلاح لون النص في حقول الإدخال عند التعبئة التلقائية */
+input[type="text"]:-webkit-autofill,
+input[type="email"]:-webkit-autofill,
+input[type="password"]:-webkit-autofill,
+input[type="number"]:-webkit-autofill,
+input[type="tel"]:-webkit-autofill,
+input[type="url"]:-webkit-autofill,
+input[type="search"]:-webkit-autofill,
+input[type="date"]:-webkit-autofill,
+input[type="time"]:-webkit-autofill,
+input[type="datetime-local"]:-webkit-autofill,
+input[type="month"]:-webkit-autofill,
+input[type="week"]:-webkit-autofill {
+  -webkit-text-fill-color: #000000 !important;
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  background-color: #ffffff !important;
+}
+
+/* إصلاح لون النص في حقول الإدخال المعطلة */
+input[type="text"]:disabled,
+input[type="email"]:disabled,
+input[type="password"]:disabled,
+input[type="number"]:disabled,
+input[type="tel"]:disabled,
+input[type="url"]:disabled,
+input[type="search"]:disabled,
+input[type="date"]:disabled,
+input[type="time"]:disabled,
+input[type="datetime-local"]:disabled,
+input[type="month"]:disabled,
+input[type="week"]:disabled,
+textarea:disabled,
+select:disabled {
+  color: #6b7280 !important;
+  background-color: #f3f4f6 !important;
+}
