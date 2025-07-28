@@ -3,6 +3,7 @@ let cloudinary: any = null;
 
 if (typeof window === 'undefined') {
   // Only import cloudinary on server-side
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { v2 } = require('cloudinary');
   cloudinary = v2;
   

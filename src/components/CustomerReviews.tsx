@@ -69,6 +69,7 @@ const reviews: Review[] = [
 ];
 
 export default function CustomerReviews() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const swiperRef = useRef<any>(null);
 
   return (
@@ -156,7 +157,7 @@ export default function CustomerReviews() {
 
                   {/* Review Comment */}
                   <p className="text-gray-700 text-body leading-relaxed mb-4 flex-grow">
-                    "{review.comment}"
+                    &ldquo;{review.comment}&rdquo;
                   </p>
 
                   {/* Customer Info */}
