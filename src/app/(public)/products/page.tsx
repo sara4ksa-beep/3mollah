@@ -82,7 +82,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             تم العثور على <span className="font-semibold text-blue-600">{total}</span> منتج
             {search && (
               <>
-                {' '}للبحث: <span className="font-semibold text-blue-600">"{search}"</span>
+                {' '}للبحث: <span className="font-semibold text-blue-600">&ldquo;{search}&rdquo;</span>
               </>
             )}
             {category && (
