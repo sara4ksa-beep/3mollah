@@ -7,7 +7,9 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "seed": "npx tsx scripts/seed.ts",
+    "clear-products": "npx tsx scripts/clear-products.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.12.0",
