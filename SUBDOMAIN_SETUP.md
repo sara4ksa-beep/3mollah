@@ -1,4 +1,4 @@
-# 🚀 دليل إعداد Subdomain: 3molah.mtekt.com
+# 🚀 دليل إعداد Subdomain: amoolah.mtekt.com
 
 ## 📋 المتطلبات الأساسية
 
@@ -17,7 +17,7 @@ https://vercel.com/dashboard
 
 # اختر مشروعك
 # Settings → Domains → Add Domain
-# اكتب: 3molah.mtekt.com
+# اكتب: amoolah.mtekt.com
 ```
 
 #### 2. إعداد DNS Records:
@@ -25,7 +25,7 @@ https://vercel.com/dashboard
 
 ```
 Type: CNAME
-Name: 3molah
+Name: amoolah
 Value: cname.vercel-dns.com
 TTL: 3600 (أو Auto)
 ```
@@ -44,7 +44,7 @@ TTL: 3600 (أو Auto)
 3. أضف:
    ```
    Type: CNAME Record
-   Host: 3molah
+   Host: amoolah
    Value: cname.vercel-dns.com
    TTL: Automatic
    ```
@@ -55,7 +55,7 @@ TTL: 3600 (أو Auto)
 3. أضف:
    ```
    Type: CNAME
-   Name: 3molah
+   Name: amoolah
    Value: cname.vercel-dns.com
    TTL: 1 Hour
    ```
@@ -66,7 +66,7 @@ TTL: 3600 (أو Auto)
 3. أضف:
    ```
    Type: CNAME
-   Name: 3molah
+   Name: amoolah
    Target: cname.vercel-dns.com
    Proxy status: DNS only (Gray cloud)
    ```
@@ -79,7 +79,7 @@ TTL: 3600 (أو Auto)
 NEXT_PUBLIC_SITE_URL=https://mtekt.com
 
 # للنطاق الفرعي (اختياري)
-NEXT_PUBLIC_SUBDOMAIN_URL=https://3molah.mtekt.com
+NEXT_PUBLIC_SUBDOMAIN_URL=https://amoolah.mtekt.com
 
 # قاعدة البيانات
 DATABASE_URL=postgresql://username:password@host:port/database
@@ -95,15 +95,15 @@ CLOUDINARY_API_SECRET=your-api-secret
 
 ## 🎨 تخصيص Subdomain
 
-### إعدادات خاصة بـ 3molah.mtekt.com:
+### إعدادات خاصة بـ amoolah.mtekt.com:
 
 ```typescript
 // في src/lib/config.ts
-if (host.includes('3molah')) {
+if (host.includes('amoolah')) {
   return {
     name: 'عمولة - متجر العمولة',
     description: 'موقع عمولة - نروج منتجات التجار مقابل عمولة من كل عملية بيع',
-    url: 'https://3molah.mtekt.com',
+    url: 'https://amoolah.mtekt.com',
     theme: {
       primary: '#10B981', // أخضر
       secondary: '#059669',
@@ -117,21 +117,21 @@ if (host.includes('3molah')) {
 ### 1. اختبار DNS:
 ```bash
 # في Terminal
-nslookup 3molah.mtekt.com
-dig 3molah.mtekt.com
+nslookup amoolah.mtekt.com
+dig amoolah.mtekt.com
 ```
 
 ### 2. اختبار الاتصال:
 ```bash
 # اختبار HTTP
-curl -I https://3molah.mtekt.com
+curl -I https://amoolah.mtekt.com
 
 # اختبار HTTPS
-curl -I https://3molah.mtekt.com
+curl -I https://amoolah.mtekt.com
 ```
 
 ### 3. اختبار في المتصفح:
-- افتح: `https://3molah.mtekt.com`
+- افتح: `https://amoolah.mtekt.com`
 - تأكد من تحميل الصفحة بشكل صحيح
 - تحقق من الشهادة الأمنية (SSL)
 
@@ -204,4 +204,4 @@ export async function GET(request: NextRequest) {
 
 ---
 
-**ملاحظة**: هذا الدليل مخصص لـ `3molah.mtekt.com` ويمكن تطبيقه على أي subdomain آخر. 
+**ملاحظة**: هذا الدليل مخصص لـ `amoolah.mtekt.com` ويمكن تطبيقه على أي subdomain آخر. 

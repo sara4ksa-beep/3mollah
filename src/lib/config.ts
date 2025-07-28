@@ -14,14 +14,14 @@ export const getSiteConfig = (hostname?: string) => {
     }
   };
 
-  // إعدادات خاصة بـ subdomain 3molah
-  if (host.includes('3molah')) {
+  // إعدادات خاصة بـ subdomain amoolah
+  if (host.includes('amoolah')) {
     return {
       ...defaultConfig,
       name: 'عمولة - متجر العمولة',
       description: 'موقع عمولة - نروج منتجات التجار مقابل عمولة من كل عملية بيع',
-      url: 'https://3molah.mtekt.com',
-      logo: '/3molah-logo.png',
+      url: 'https://amoolah.mtekt.com',
+      logo: '/amoolah-logo.png',
       theme: {
         primary: '#10B981', // أخضر
         secondary: '#059669',
