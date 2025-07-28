@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from 'react';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
-import { uploadImage } from '@/lib/cloudinary';
 
 interface ImageUploadProps {
   onUpload: (publicId: string) => void;
@@ -55,8 +54,20 @@ export default function ImageUpload({
     
     try {
       const uploadPromises = files.slice(0, maxFiles).map(async (file) => {
-        const publicId = await uploadImage(file);
-        return publicId;
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+        
+        const data = await response.json();
+        return data.publicId;
       });
 
       const uploadedIds = await Promise.all(uploadPromises);

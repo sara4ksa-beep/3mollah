@@ -1,15 +1,21 @@
-import { v2 as cloudinary } from 'cloudinary';
+// Server-side only Cloudinary configuration
+let cloudinary: any = null;
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dniyiqmgn',
-  api_key: process.env.CLOUDINARY_API_KEY || '882849791158336',
-  api_secret: process.env.CLOUDINARY_API_SECRET || 'jYNZLnm2G-_HmmtlOSe2LTHip4c',
-});
+if (typeof window === 'undefined') {
+  // Only import cloudinary on server-side
+  const { v2 } = require('cloudinary');
+  cloudinary = v2;
+  
+  cloudinary.config({
+    cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dniyiqmgn',
+    api_key: process.env.CLOUDINARY_API_KEY || '882849791158336',
+    api_secret: process.env.CLOUDINARY_API_SECRET || 'jYNZLnm2G-_HmmtlOSe2LTHip4c',
+  });
+}
 
 export default cloudinary;
 
-// Helper function to generate optimized image URLs
+// Helper function to generate optimized image URLs (works on both client and server)
 export const getOptimizedImageUrl = (
   publicId: string,
   options: {
@@ -28,6 +34,7 @@ export const getOptimizedImageUrl = (
     crop = 'fill'
   } = options;
 
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dniyiqmgn';
   const transformations = [];
   
   if (width || height) {
@@ -37,31 +44,16 @@ export const getOptimizedImageUrl = (
   transformations.push(`q_${quality}`);
   transformations.push(`f_${format}`);
 
-  return cloudinary.url(publicId, {
-    transformation: transformations.join('/'),
-    secure: true
-  });
+  const transformationString = transformations.join('/');
+  
+  return `https://res.cloudinary.com/${cloudName}/image/upload/${transformationString}/${publicId}`;
 };
 
-// Helper function to upload images
-export const uploadImage = async (file: File): Promise<string> => {
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'ml_default');
 
-  const response = await fetch(
-    `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dniyiqmgn'}/image/upload`,
-    {
-      method: 'POST',
-      body: formData,
-    }
-  );
 
-  const data = await response.json();
-  return data.public_id;
-};
-
-// Helper function to delete images
+// Helper function to delete images (server-side only)
 export const deleteImage = async (publicId: string): Promise<void> => {
-  await cloudinary.uploader.destroy(publicId);
+  if (typeof window === 'undefined' && cloudinary) {
+    await cloudinary.uploader.destroy(publicId);
+  }
 }; 
