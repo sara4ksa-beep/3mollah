@@ -110,8 +110,11 @@ export default function AdminLayout({
             userName={user.name}
             onLogout={handleLogout}
           />
-          <div className="flex-1 overflow-auto mr-64">
-            {children}
+          {/* Main Content - Responsive margin */}
+          <div className="flex-1 overflow-auto lg:mr-64">
+            <div className="p-4 lg:p-8">
+              {children}
+            </div>
           </div>
         </div>
       </body>
