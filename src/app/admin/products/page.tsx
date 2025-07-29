@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Package, Plus, Edit, Trash2, Eye, Filter, Search } from 'lucide-react';
 import AdminSidebar from '@/components/AdminSidebar';
+import ImageUpload from '@/components/ImageUpload';
+import { ThumbnailImage } from '@/components/CloudinaryImage';
 
 interface Product {
   id: string;
@@ -11,7 +13,6 @@ interface Product {
   price: number;
   originalPrice: number | null;
   image: string | null;
-  affiliateUrl: string;
   isActive: boolean;
   clicks: number;
   category: {
@@ -41,7 +42,6 @@ export default function ProductsPage() {
     price: 0,
     originalPrice: 0,
     image: '',
-    affiliateUrl: '',
     categoryId: '',
     isActive: true
   });
@@ -80,7 +80,8 @@ export default function ProductsPage() {
 
       if (response.ok) {
         const data = await response.json();
-        setProducts(data);
+        console.log('Fetched products data:', data);
+        setProducts(data.products || data);
       } else {
         console.error('Failed to fetch products');
       }
@@ -112,8 +113,12 @@ export default function ProductsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('Submitting form data:', formData);
+    
     try {
       const token = localStorage.getItem('adminToken');
+      console.log('Token:', token ? 'Found' : 'Not found');
+      
       const response = await fetch('/api/products', {
         method: 'POST',
         headers: {
@@ -123,7 +128,10 @@ export default function ProductsPage() {
         body: JSON.stringify(formData)
       });
 
+      console.log('Response status:', response.status);
+      
       if (response.ok) {
+        console.log('Product created successfully');
         setShowAddForm(false);
         setFormData({
           name: '',
@@ -131,13 +139,13 @@ export default function ProductsPage() {
           price: 0,
           originalPrice: 0,
           image: '',
-          affiliateUrl: '',
           categoryId: '',
           isActive: true
         });
         fetchProducts();
       } else {
         const error = await response.json();
+        console.error('API Error:', error);
         alert(error.error);
       }
     } catch (error) {
@@ -169,7 +177,6 @@ export default function ProductsPage() {
           price: 0,
           originalPrice: 0,
           image: '',
-          affiliateUrl: '',
           categoryId: '',
           isActive: true
         });
@@ -303,21 +310,23 @@ export default function ProductsPage() {
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 {editingProduct ? 'تعديل المنتج' : 'إضافة منتج جديد'}
               </h2>
-              <form onSubmit={editingProduct ? handleEdit : handleSubmit} className="space-y-4">
+              <form onSubmit={editingProduct ? handleEdit : handleSubmit} className="space-y-6">
+                {/* المعلومات الأساسية */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">اسم المنتج</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">اسم المنتج *</label>
                     <input
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="أدخل اسم المنتج"
                       required
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">الفئة</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">الفئة *</label>
                     <select
                       value={formData.categoryId}
                       onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
@@ -332,72 +341,72 @@ export default function ProductsPage() {
                       ))}
                     </select>
                   </div>
-                  
+                </div>
+
+                {/* الأسعار */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">السعر الحالي</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">السعر الحالي *</label>
                     <input
                       type="number"
                       step="0.01"
+                      min="0"
                       value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="0.00"
                       required
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">السعر الأصلي</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">السعر الأصلي (اختياري)</label>
                     <input
                       type="number"
                       step="0.01"
+                      min="0"
                       value={formData.originalPrice}
-                      onChange={(e) => setFormData({ ...formData, originalPrice: parseFloat(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, originalPrice: parseFloat(e.target.value) || 0 })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="0.00"
                     />
                   </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">رابط المنتج</label>
+                </div>
+
+                {/* صورة المنتج */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">صورة المنتج</label>
+                  <ImageUpload
+                    onUpload={(publicId) => setFormData({ ...formData, image: publicId })}
+                    onRemove={() => setFormData({ ...formData, image: '' })}
+                    currentImage={formData.image}
+                    className="w-full"
+                  />
+                </div>
+
+                {/* الوصف */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">وصف المنتج</label>
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={4}
+                    placeholder="أدخل وصف المنتج..."
+                  />
+                </div>
+
+                {/* حالة المنتج */}
+                <div>
+                  <label className="flex items-center">
                     <input
-                      type="url"
-                      value={formData.affiliateUrl}
-                      onChange={(e) => setFormData({ ...formData, affiliateUrl: e.target.value })}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
+                      type="checkbox"
+                      checked={formData.isActive}
+                      onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                      className="ml-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">رابط الصورة</label>
-                    <input
-                      type="url"
-                      value={formData.image}
-                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">الوصف</label>
-                    <textarea
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      rows={3}
-                    />
-                  </div>
-                  
-                  <div className="md:col-span-2">
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={formData.isActive}
-                        onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                        className="ml-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                      />
-                      <span className="text-sm text-gray-700">منتج نشط</span>
-                    </label>
-                  </div>
+                    <span className="text-sm text-gray-700">منتج نشط (سيظهر في الموقع)</span>
+                  </label>
                 </div>
                 
                 <div className="flex gap-3">
@@ -418,7 +427,6 @@ export default function ProductsPage() {
                         price: 0,
                         originalPrice: 0,
                         image: '',
-                        affiliateUrl: '',
                         categoryId: '',
                         isActive: true
                       });
@@ -426,6 +434,27 @@ export default function ProductsPage() {
                     className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400"
                   >
                     إلغاء
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // Test with sample data
+                      const testData = {
+                        name: 'منتج تجريبي',
+                        description: 'وصف تجريبي للمنتج',
+                        price: 99.99,
+                        originalPrice: 149.99,
+                        image: '',
+                        categoryId: categories.length > 0 ? categories[0].id : '',
+                        isActive: true
+                      };
+                      setFormData(testData);
+                      console.log('Test data set:', testData);
+                      console.log('Available categories:', categories);
+                    }}
+                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                  >
+                    بيانات تجريبية
                   </button>
                 </div>
               </form>
@@ -451,12 +480,18 @@ export default function ProductsPage() {
                     <tr key={product.id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4">
                         <div className="flex items-center">
-                          {product.image && (
-                            <img 
-                              src={product.image} 
-                              alt={product.name}
-                              className="w-12 h-12 rounded-lg object-cover mr-3"
-                            />
+                          {product.image ? (
+                            <div className="mr-3">
+                              <ThumbnailImage
+                                src={product.image}
+                                alt={product.name}
+                                className="w-12 h-12"
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mr-3">
+                              <Package className="h-6 w-6 text-gray-400" />
+                            </div>
                           )}
                           <div>
                             <p className="font-medium text-gray-800">{product.name}</p>

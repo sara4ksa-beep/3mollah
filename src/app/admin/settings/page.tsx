@@ -684,7 +684,7 @@ export default function SettingsPage() {
                   min="0"
                   max="100"
                   value={settings.defaultCommission}
-                  onChange={(e) => setSettings({ ...settings, defaultCommission: Number(e.target.value) })}
+                  onChange={(e) => setSettings({ ...settings, defaultCommission: Number(e.target.value) || 10 })}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -696,7 +696,7 @@ export default function SettingsPage() {
                   min="0"
                   max="100"
                   value={settings.minCommission}
-                  onChange={(e) => setSettings({ ...settings, minCommission: Number(e.target.value) })}
+                  onChange={(e) => setSettings({ ...settings, minCommission: Number(e.target.value) || 5 })}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -708,7 +708,7 @@ export default function SettingsPage() {
                   min="0"
                   max="100"
                   value={settings.maxCommission}
-                  onChange={(e) => setSettings({ ...settings, maxCommission: Number(e.target.value) })}
+                  onChange={(e) => setSettings({ ...settings, maxCommission: Number(e.target.value) || 50 })}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -732,7 +732,7 @@ export default function SettingsPage() {
                   min="5"
                   max="1440"
                   value={settings.sessionTimeout}
-                  onChange={(e) => setSettings({ ...settings, sessionTimeout: Number(e.target.value) })}
+                  onChange={(e) => setSettings({ ...settings, sessionTimeout: Number(e.target.value) || 30 })}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -744,7 +744,7 @@ export default function SettingsPage() {
                   min="3"
                   max="10"
                   value={settings.maxLoginAttempts}
-                  onChange={(e) => setSettings({ ...settings, maxLoginAttempts: Number(e.target.value) })}
+                  onChange={(e) => setSettings({ ...settings, maxLoginAttempts: Number(e.target.value) || 5 })}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>

@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { Upload, X } from 'lucide-react';
+import { ThumbnailImage } from './CloudinaryImage';
 
 interface ImageUploadProps {
   onUpload: (publicId: string) => void;
@@ -141,10 +142,10 @@ export default function ImageUpload({
       {/* Current Image Display */}
       {currentImage && !multiple && (
         <div className="relative inline-block">
-          <img
-            src={`https://res.cloudinary.com/dniyiqmgn/image/upload/w_200,h_200,c_fill/${currentImage}`}
+          <ThumbnailImage
+            src={currentImage}
             alt="Current"
-            className="w-32 h-32 object-cover rounded-lg"
+            className="w-32 h-32"
           />
           {onRemove && (
             <button
@@ -162,10 +163,10 @@ export default function ImageUpload({
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {uploadedImages.map((imageId, index) => (
             <div key={index} className="relative">
-              <img
-                src={`https://res.cloudinary.com/dniyiqmgn/image/upload/w_200,h_200,c_fill/${imageId}`}
+              <ThumbnailImage
+                src={imageId}
                 alt={`Uploaded ${index + 1}`}
-                className="w-full h-24 object-cover rounded-lg"
+                className="w-full h-24"
               />
               <button
                 onClick={() => removeImage(index)}

@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Filter, Plus, Edit, Trash2, Package } from 'lucide-react';
 import AdminSidebar from '@/components/AdminSidebar';
+import ImageUpload from '@/components/ImageUpload';
+import { ThumbnailImage } from '@/components/CloudinaryImage';
 
 interface Category {
   id: string;
@@ -246,12 +248,12 @@ export default function CategoriesPage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">رابط الصورة</label>
-                    <input
-                      type="url"
-                      value={formData.image}
-                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    <label className="block text-sm font-medium text-gray-700 mb-1">صورة الفئة</label>
+                    <ImageUpload
+                      onUpload={(publicId) => setFormData({ ...formData, image: publicId })}
+                      onRemove={() => setFormData({ ...formData, image: '' })}
+                      currentImage={formData.image}
+                      className="w-full"
                     />
                   </div>
                   
@@ -260,7 +262,7 @@ export default function CategoriesPage() {
                     <input
                       type="number"
                       value={formData.sortOrder}
-                      onChange={(e) => setFormData({ ...formData, sortOrder: parseInt(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, sortOrder: parseInt(e.target.value) || 0 })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
@@ -308,12 +310,18 @@ export default function CategoriesPage() {
                     <tr key={category.id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4">
                         <div className="flex items-center">
-                          {category.image && (
-                            <img 
-                              src={category.image} 
-                              alt={category.name}
-                              className="w-10 h-10 rounded-lg object-cover mr-3"
-                            />
+                          {category.image ? (
+                            <div className="mr-3">
+                              <ThumbnailImage
+                                src={category.image}
+                                alt={category.name}
+                                className="w-10 h-10"
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center mr-3">
+                              <Package className="h-5 w-5 text-gray-400" />
+                            </div>
                           )}
                           <div>
                             <p className="font-medium text-gray-800">{category.name}</p>

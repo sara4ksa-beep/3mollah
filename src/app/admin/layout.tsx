@@ -78,7 +78,7 @@ export default function AdminLayout({
   if (isLoginPage) {
     return (
       <html lang="ar" dir="rtl">
-        <body className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-gray-50`}>
+        <body className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-white`} suppressHydrationWarning={true}>
           {children}
         </body>
       </html>
@@ -88,7 +88,7 @@ export default function AdminLayout({
   if (loading) {
     return (
       <html lang="ar" dir="rtl">
-        <body className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-gray-50`}>
+        <body className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-white`} suppressHydrationWarning={true}>
           <div className="flex items-center justify-center h-screen">
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
           </div>
@@ -103,7 +103,7 @@ export default function AdminLayout({
 
   return (
     <html lang="ar" dir="rtl">
-      <body className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-gray-50`}>
+      <body className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-white`} suppressHydrationWarning={true}>
         <div className="flex h-screen">
           <AdminSidebar 
             userRole={user.role}

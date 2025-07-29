@@ -14,6 +14,8 @@
   --font-poppins: 'Poppins', sans-serif;
 }
 
+/* Disabled dark mode to prevent black background */
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -21,15 +23,11 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
+*/
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: #ffffff;
   font-family: var(--font-cairo), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -272,7 +270,8 @@ body {
   }
 }
 
-/* Dark mode support for typography */
+/* Dark mode support for typography - DISABLED */
+/*
 @media (prefers-color-scheme: dark) {
   .text-heading,
   .text-subheading,
@@ -302,7 +301,7 @@ body {
     color: #000000 !important;
     background-color: #ffffff !important;
   }
-}
+*/
 
 /* فرض اللون الرمادي الغامق للنصوص الرئيسية في الوضع الفاتح */
 .text-heading,
