@@ -432,11 +432,22 @@ export default function ProductsPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">صورة المنتج</label>
                   <ImageUpload
-                    onUpload={(publicId) => setFormData({ ...formData, image: publicId })}
-                    onRemove={() => setFormData({ ...formData, image: '' })}
+                    onUpload={(publicId) => {
+                      console.log('Image uploaded, setting publicId:', publicId);
+                      setFormData({ ...formData, image: publicId });
+                    }}
+                    onRemove={() => {
+                      console.log('Image removed');
+                      setFormData({ ...formData, image: '' });
+                    }}
                     currentImage={formData.image}
                     className="w-full"
                   />
+                  {formData.image && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      تم رفع الصورة: {formData.image}
+                    </p>
+                  )}
                 </div>
 
                 {/* الوصف */}

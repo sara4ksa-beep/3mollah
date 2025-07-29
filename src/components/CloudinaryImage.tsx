@@ -162,6 +162,8 @@ export function HeroImage({ src, alt, className = '' }: { src: string; alt: stri
 
 // Optimized image component for thumbnails
 export function ThumbnailImage({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
+  console.log('ThumbnailImage src:', src);
+  
   // If no src or empty src, return placeholder
   if (!src || src.trim() === '') {
     return (

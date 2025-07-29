@@ -68,15 +68,18 @@ export default function ImageUpload({
         }
         
         const data = await response.json();
+        console.log('Upload response:', data);
         return data.publicId;
       });
 
       const uploadedIds = await Promise.all(uploadPromises);
+      console.log('Uploaded IDs:', uploadedIds);
       
       if (multiple) {
         setUploadedImages(prev => [...prev, ...uploadedIds]);
         uploadedIds.forEach(id => onUpload(id));
       } else {
+        console.log('Setting single image:', uploadedIds[0]);
         onUpload(uploadedIds[0]);
       }
     } catch (error) {
@@ -142,6 +145,9 @@ export default function ImageUpload({
       {/* Current Image Display */}
       {currentImage && currentImage.trim() !== '' && !multiple && (
         <div className="relative inline-block">
+          <div className="mb-2">
+            <p className="text-sm text-gray-600">الصورة الحالية:</p>
+          </div>
           <ThumbnailImage
             src={currentImage}
             alt="Current"
@@ -155,6 +161,14 @@ export default function ImageUpload({
               <X className="w-4 h-4" />
             </button>
           )}
+        </div>
+      )}
+
+      {/* Upload Status */}
+      {isUploading && (
+        <div className="text-center py-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+          <p className="text-sm text-gray-600">جاري رفع الصورة...</p>
         </div>
       )}
 
