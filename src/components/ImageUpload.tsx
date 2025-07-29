@@ -147,6 +147,7 @@ export default function ImageUpload({
         <div className="relative inline-block">
           <div className="mb-2">
             <p className="text-sm text-gray-600">الصورة الحالية:</p>
+            <p className="text-xs text-gray-500">ID: {currentImage}</p>
           </div>
           <ThumbnailImage
             src={currentImage}
@@ -163,6 +164,13 @@ export default function ImageUpload({
           )}
         </div>
       )}
+
+      {/* Debug Info */}
+      <div className="text-xs text-gray-400 mt-2">
+        <p>Debug: currentImage = "{currentImage}"</p>
+        <p>Debug: currentImage.trim() = "{currentImage?.trim()}"</p>
+        <p>Debug: currentImage && currentImage.trim() !== '' = {String(currentImage && currentImage.trim() !== '')}</p>
+      </div>
 
       {/* Upload Status */}
       {isUploading && (

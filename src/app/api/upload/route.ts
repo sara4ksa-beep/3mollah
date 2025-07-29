@@ -31,13 +31,19 @@ export async function POST(request: NextRequest) {
       ).end(buffer);
     });
 
-    return NextResponse.json({
+    console.log('Cloudinary upload result:', result);
+
+    const response = {
       success: true,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       publicId: (result as any).public_id,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       url: (result as any).secure_url,
-    });
+    };
+
+    console.log('Upload API response:', response);
+
+    return NextResponse.json(response);
 
   } catch (error) {
     console.error('Upload error:', error);

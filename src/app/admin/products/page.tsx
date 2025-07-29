@@ -444,9 +444,14 @@ export default function ProductsPage() {
                     className="w-full"
                   />
                   {formData.image && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      تم رفع الصورة: {formData.image}
-                    </p>
+                    <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded">
+                      <p className="text-xs text-green-700">
+                        ✅ تم رفع الصورة بنجاح
+                      </p>
+                      <p className="text-xs text-green-600">
+                        ID: {formData.image}
+                      </p>
+                    </div>
                   )}
                 </div>
 
