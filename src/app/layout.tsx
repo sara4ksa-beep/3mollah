@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Cairo, Inter, Poppins } from 'next/font/google';
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 // تكوين الخطوط
 const cairo = Cairo({
@@ -27,6 +29,23 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "متجر العمولة - تسوق بذكاء",
   description: "موقع البيع بالعمولة - نروج منتجات التجار مقابل عمولة من كل عملية بيع",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://mtekt.com'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: "متجر العمولة - تسوق بذكاء",
+    description: "موقع البيع بالعمولة - نروج منتجات التجار مقابل عمولة من كل عملية بيع",
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://mtekt.com',
+    siteName: 'متجر العمولة',
+    locale: 'ar_SA',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "متجر العمولة - تسوق بذكاء",
+    description: "موقع البيع بالعمولة - نروج منتجات التجار مقابل عمولة من كل عملية بيع",
+  },
 };
 
 export default function RootLayout({
@@ -37,9 +56,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-gray-50`}>
-        <main className="min-h-screen">
-          {children}
-        </main>
+        {children}
       </body>
     </html>
   );
