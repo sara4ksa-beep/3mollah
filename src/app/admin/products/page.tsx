@@ -72,6 +72,12 @@ export default function ProductsPage() {
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem('adminToken');
+      
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      
       const response = await fetch('/api/products', {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -82,6 +88,11 @@ export default function ProductsPage() {
         const data = await response.json();
         console.log('Fetched products data:', data);
         setProducts(data.products || data);
+      } else if (response.status === 401) {
+        console.error('Unauthorized - token may be invalid');
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminUser');
+        window.location.href = '/admin/login';
       } else {
         console.error('Failed to fetch products');
       }
@@ -119,6 +130,12 @@ export default function ProductsPage() {
       const token = localStorage.getItem('adminToken');
       console.log('Token:', token ? 'Found' : 'Not found');
       
+      if (!token) {
+        alert('جلسة منتهية. يرجى تسجيل الدخول مرة أخرى.');
+        window.location.href = '/admin/login';
+        return;
+      }
+      
       const response = await fetch('/api/products', {
         method: 'POST',
         headers: {
@@ -143,10 +160,18 @@ export default function ProductsPage() {
           isActive: true
         });
         fetchProducts();
+        alert('تم إضافة المنتج بنجاح');
       } else {
         const error = await response.json();
         console.error('API Error:', error);
-        alert(error.error);
+        if (response.status === 401) {
+          alert('جلسة منتهية. يرجى تسجيل الدخول مرة أخرى.');
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('adminUser');
+          window.location.href = '/admin/login';
+        } else {
+          alert(error.error || 'حدث خطأ في إضافة المنتج');
+        }
       }
     } catch (error) {
       console.error('Error creating product:', error);
@@ -160,6 +185,13 @@ export default function ProductsPage() {
     
     try {
       const token = localStorage.getItem('adminToken');
+      
+      if (!token) {
+        alert('جلسة منتهية. يرجى تسجيل الدخول مرة أخرى.');
+        window.location.href = '/admin/login';
+        return;
+      }
+
       const response = await fetch(`/api/products/${editingProduct.id}`, {
         method: 'PUT',
         headers: {
@@ -181,9 +213,17 @@ export default function ProductsPage() {
           isActive: true
         });
         fetchProducts();
+        alert('تم تحديث المنتج بنجاح');
       } else {
         const error = await response.json();
-        alert(error.error);
+        if (response.status === 401) {
+          alert('جلسة منتهية. يرجى تسجيل الدخول مرة أخرى.');
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('adminUser');
+          window.location.href = '/admin/login';
+        } else {
+          alert(error.error || 'حدث خطأ في تحديث المنتج');
+        }
       }
     } catch (error) {
       console.error('Error updating product:', error);
@@ -196,6 +236,13 @@ export default function ProductsPage() {
     
     try {
       const token = localStorage.getItem('adminToken');
+      
+      if (!token) {
+        alert('جلسة منتهية. يرجى تسجيل الدخول مرة أخرى.');
+        window.location.href = '/admin/login';
+        return;
+      }
+
       const response = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
         headers: {
@@ -205,9 +252,17 @@ export default function ProductsPage() {
 
       if (response.ok) {
         fetchProducts();
+        alert('تم حذف المنتج بنجاح');
       } else {
         const error = await response.json();
-        alert(error.error);
+        if (response.status === 401) {
+          alert('جلسة منتهية. يرجى تسجيل الدخول مرة أخرى.');
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('adminUser');
+          window.location.href = '/admin/login';
+        } else {
+          alert(error.error || 'حدث خطأ في حذف المنتج');
+        }
       }
     } catch (error) {
       console.error('Error deleting product:', error);

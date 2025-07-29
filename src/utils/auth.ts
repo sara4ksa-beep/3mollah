@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-for-pmp-2025';
 
 export interface JWTPayload {
   id: string;
