@@ -46,9 +46,9 @@ export default async function Home({ searchParams }: HomePageProps) {
       <HeroBanner />
       
       {/* Products Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12 text-heading">
+      <section className="py-8 md:py-12 lg:py-16 bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-gray-800 mb-8 md:mb-12 text-heading">
             منتجاتنا المميزة
           </h2>
           
@@ -57,7 +57,7 @@ export default async function Home({ searchParams }: HomePageProps) {
           
           {/* Products Grid */}
           {products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
               {products.map((product) => (
                 <ProductCard
                   key={product.id}
@@ -70,8 +70,8 @@ export default async function Home({ searchParams }: HomePageProps) {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg text-body">
+            <div className="text-center py-8 md:py-12">
+              <p className="text-gray-500 text-base md:text-lg text-body">
                 {search || category 
                   ? 'لم يتم العثور على منتجات تطابق معايير البحث'
                   : 'لا توجد منتجات متاحة حالياً'

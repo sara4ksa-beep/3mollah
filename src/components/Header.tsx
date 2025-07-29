@@ -21,13 +21,13 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors text-heading">
+            <Link href="/" className="text-xl md:text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors text-heading">
               متجر العمولة
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center">
+          <nav className="hidden md:flex items-center space-x-4 space-x-reverse">
             <Link 
               href="/contact" 
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -38,7 +38,7 @@ export default function Header() {
             
             <Link 
               href="/" 
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors mr-4"
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
             >
               <span className="font-bold">الرئيسية</span>
               <Home size={18} />
@@ -60,8 +60,8 @@ export default function Header() {
         </div>
 
         {/* Mobile Navigation */}
-        <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'}`}>
-          <div className="mt-4 pb-4 border-t border-gray-200">
+        {isMenuOpen && (
+          <div className="md:hidden mt-4 pb-4 border-t border-gray-200">
             <nav className="flex flex-col space-y-3 pt-4">
               <Link 
                 href="/" 
@@ -82,16 +82,8 @@ export default function Header() {
               </Link>
             </nav>
           </div>
-        </div>
+        )}
       </div>
-
-      {/* Overlay for mobile menu */}
-      {isMenuOpen && (
-        <div 
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={closeMenu}
-        />
-      )}
     </header>
   );
 } 
