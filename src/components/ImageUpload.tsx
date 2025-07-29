@@ -140,7 +140,7 @@ export default function ImageUpload({
       </div>
 
       {/* Current Image Display */}
-      {currentImage && !multiple && (
+      {currentImage && currentImage.trim() !== '' && !multiple && (
         <div className="relative inline-block">
           <ThumbnailImage
             src={currentImage}
@@ -161,7 +161,7 @@ export default function ImageUpload({
       {/* Multiple Images Display */}
       {multiple && uploadedImages.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {uploadedImages.map((imageId, index) => (
+          {uploadedImages.filter(img => img && img.trim() !== '').map((imageId, index) => (
             <div key={index} className="relative">
               <ThumbnailImage
                 src={imageId}

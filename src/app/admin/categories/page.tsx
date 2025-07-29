@@ -310,19 +310,13 @@ export default function CategoriesPage() {
                     <tr key={category.id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4">
                         <div className="flex items-center">
-                          {category.image ? (
-                            <div className="mr-3">
-                              <ThumbnailImage
-                                src={category.image}
-                                alt={category.name}
-                                className="w-10 h-10"
-                              />
-                            </div>
-                          ) : (
-                            <div className="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center mr-3">
-                              <Package className="h-5 w-5 text-gray-400" />
-                            </div>
-                          )}
+                          <div className="mr-3">
+                            <ThumbnailImage
+                              src={category.image || ''}
+                              alt={category.name}
+                              className="w-10 h-10"
+                            />
+                          </div>
                           <div>
                             <p className="font-medium text-gray-800">{category.name}</p>
                             <p className="text-sm text-gray-500">{category.slug}</p>

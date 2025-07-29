@@ -480,19 +480,13 @@ export default function ProductsPage() {
                     <tr key={product.id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4">
                         <div className="flex items-center">
-                          {product.image ? (
-                            <div className="mr-3">
-                              <ThumbnailImage
-                                src={product.image}
-                                alt={product.name}
-                                className="w-12 h-12"
-                              />
-                            </div>
-                          ) : (
-                            <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mr-3">
-                              <Package className="h-6 w-6 text-gray-400" />
-                            </div>
-                          )}
+                          <div className="mr-3">
+                            <ThumbnailImage
+                              src={product.image || ''}
+                              alt={product.name}
+                              className="w-12 h-12"
+                            />
+                          </div>
                           <div>
                             <p className="font-medium text-gray-800">{product.name}</p>
                             <p className="text-sm text-gray-500 max-w-xs truncate">

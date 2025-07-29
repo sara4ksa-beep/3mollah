@@ -31,6 +31,18 @@ export default function CloudinaryImage({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  // Validate URL
+  const isValidUrl = (url: string) => {
+    if (!url || url.trim() === '') return false;
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      // If it's not a valid URL, check if it's a Cloudinary public ID
+      return /^[a-zA-Z0-9_-]+$/.test(url) || url.includes('cloudinary.com');
+    }
+  };
+
   // Handle loading state
   const handleLoad = () => {
     setIsLoading(false);
@@ -41,6 +53,18 @@ export default function CloudinaryImage({
     setError(true);
     setIsLoading(false);
   };
+
+  // If no valid src, show placeholder
+  if (!isValidUrl(src)) {
+    return (
+      <div 
+        className={`bg-gray-200 flex items-center justify-center ${className}`}
+        style={{ width, height }}
+      >
+        <span className="text-gray-500 text-sm">لا توجد صورة</span>
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -87,6 +111,15 @@ export default function CloudinaryImage({
 
 // Optimized image component for product cards
 export function ProductImage({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
+  // If no src or empty src, return placeholder
+  if (!src || src.trim() === '') {
+    return (
+      <div className={`bg-gray-200 flex items-center justify-center rounded-lg ${className}`} style={{ width: 300, height: 300 }}>
+        <span className="text-gray-500 text-sm">لا توجد صورة</span>
+      </div>
+    );
+  }
+
   return (
     <CloudinaryImage
       src={src}
@@ -103,6 +136,15 @@ export function ProductImage({ src, alt, className = '' }: { src: string; alt: s
 
 // Optimized image component for hero banners
 export function HeroImage({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
+  // If no src or empty src, return placeholder
+  if (!src || src.trim() === '') {
+    return (
+      <div className={`bg-gray-200 flex items-center justify-center w-full ${className}`} style={{ height: 600 }}>
+        <span className="text-gray-500 text-lg">لا توجد صورة</span>
+      </div>
+    );
+  }
+
   return (
     <CloudinaryImage
       src={src}
@@ -120,6 +162,15 @@ export function HeroImage({ src, alt, className = '' }: { src: string; alt: stri
 
 // Optimized image component for thumbnails
 export function ThumbnailImage({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
+  // If no src or empty src, return placeholder
+  if (!src || src.trim() === '') {
+    return (
+      <div className={`bg-gray-200 flex items-center justify-center rounded ${className}`} style={{ width: 100, height: 100 }}>
+        <span className="text-gray-500 text-xs">لا توجد صورة</span>
+      </div>
+    );
+  }
+
   return (
     <CloudinaryImage
       src={src}
