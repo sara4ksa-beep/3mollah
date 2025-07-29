@@ -8,10 +8,12 @@ export const useSiteConfig = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // الحصول على النطاق الحالي
-    const hostname = window.location.hostname;
-    const siteConfig = getSiteConfig(hostname);
-    setConfig(siteConfig);
+    // الحصول على النطاق الحالي من المتصفح
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      const siteConfig = getSiteConfig(hostname);
+      setConfig(siteConfig);
+    }
     setLoading(false);
   }, []);
 

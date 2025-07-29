@@ -1,17 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSiteConfig } from '@/lib/config';
 
 export function middleware(request: NextRequest) {
-  const { pathname, hostname } = request.nextUrl;
-  
-  // الحصول على إعدادات الموقع حسب النطاق
-  const siteConfig = getSiteConfig(hostname);
-  
-  // إضافة headers خاصة بـ subdomain
-  const response = NextResponse.next();
-  
-  // إضافة معلومات النطاق للاستخدام في التطبيق
-  response.headers.set('x-site-config', JSON.stringify(siteConfig));
+  const { hostname } = request.nextUrl;
   
   // إعادة توجيه من www إلى النطاق الرئيسي (اختياري)
   if (hostname.startsWith('www.')) {
@@ -21,7 +11,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(newUrl);
   }
   
-  return response;
+  return NextResponse.next();
 }
 
 export const config = {
