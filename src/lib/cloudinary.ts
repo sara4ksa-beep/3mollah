@@ -9,9 +9,9 @@ if (typeof window === 'undefined') {
   cloudinary = v2;
   
   cloudinary.config({
-    cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dniyiqmgn',
-    api_key: process.env.CLOUDINARY_API_KEY || '882849791158336',
-    api_secret: process.env.CLOUDINARY_API_SECRET || 'jYNZLnm2G-_HmmtlOSe2LTHip4c',
+    cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dulvp7ipq',
+    api_key: process.env.CLOUDINARY_API_KEY || '512317196777693',
+    api_secret: process.env.CLOUDINARY_API_SECRET || '_KAAVUQEKlf1KuSjGogInY8PqIY',
   });
 }
 
@@ -36,7 +36,7 @@ export const getOptimizedImageUrl = (
     crop = 'fill'
   } = options;
 
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dniyiqmgn';
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dulvp7ipq';
   const transformations = [];
   
   if (width || height) {

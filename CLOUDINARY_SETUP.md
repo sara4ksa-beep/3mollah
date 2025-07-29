@@ -4,9 +4,9 @@
 
 ### 🔧 المتطلبات الأساسية
 - حساب Cloudinary
-- Cloud Name: `dniyiqmgn`
-- API Key: `882849791158336`
-- API Secret: `jYNZLnm2G-_HmmtlOSe2LTHip4c`
+- Cloud Name: `dulvp7ipq`
+- API Key: `512317196777693`
+- API Secret: `_KAAVUQEKlf1KuSjGogInY8PqIY`
 
 ### 📦 المكتبات المثبتة
 ```bash
