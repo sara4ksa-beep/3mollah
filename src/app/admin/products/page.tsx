@@ -18,7 +18,7 @@ interface Product {
   category: {
     id: string;
     name: string;
-  };
+  } | null;
   createdAt: string;
 }
 
@@ -279,7 +279,7 @@ export default function ProductsPage() {
   const filteredProducts = Array.isArray(products) ? products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !categoryFilter || product.category.id === categoryFilter;
+    const matchesCategory = !categoryFilter || product.category?.id === categoryFilter;
     return matchesSearch && matchesCategory;
   }) : [];
 
@@ -568,7 +568,7 @@ export default function ProductsPage() {
                       </td>
                       <td className="py-3 px-4">
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          {product.category.name}
+                          {product.category?.name || 'بدون فئة'}
                         </span>
                       </td>
                       <td className="py-3 px-4">
@@ -606,7 +606,7 @@ export default function ProductsPage() {
                                 originalPrice: product.originalPrice || 0,
                                 image: product.image || '',
                                 affiliateUrl: product.affiliateUrl,
-                                categoryId: product.category.id,
+                                categoryId: product.category?.id || '',
                                 isActive: product.isActive
                               });
                             }}

@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
 import { Check, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import BuyButton from '@/components/BuyButton';
+import { ProductImage } from '@/components/CloudinaryImage';
 
 interface ProductPageProps {
   params: Promise<{
@@ -37,13 +37,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
             {/* Product Image */}
             <div className="relative h-96 lg:h-full">
-              <Image
+              <ProductImage
                 src={product.image}
                 alt={product.name}
-                fill
-                className="object-cover rounded-lg"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                placeholder="empty"
+                className="w-full h-full object-cover rounded-lg"
               />
             </div>
 

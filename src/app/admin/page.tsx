@@ -12,7 +12,7 @@ interface DashboardData {
     id: string;
     name: string;
     clicks: number;
-    category: { name: string };
+    category: { name: string } | null;
   }>;
 }
 
@@ -77,7 +77,7 @@ export default function AdminDashboard() {
               id: '3',
               name: 'منتج تجريبي 3',
               clicks: 95,
-              category: { name: 'المنزل' }
+              category: null
             }
           ]
         });
@@ -107,7 +107,7 @@ export default function AdminDashboard() {
             id: '3',
             name: 'منتج تجريبي 3',
             clicks: 95,
-            category: { name: 'المنزل' }
+            category: null
           }
         ]
       });
@@ -274,7 +274,7 @@ export default function AdminDashboard() {
                   </span>
                   <div className="mr-3">
                     <p className="font-medium text-gray-800">{product.name}</p>
-                    <p className="text-sm text-gray-500">{product.category.name}</p>
+                    <p className="text-sm text-gray-500">{product.category?.name || 'بدون فئة'}</p>
                   </div>
                 </div>
                 <div className="text-left">

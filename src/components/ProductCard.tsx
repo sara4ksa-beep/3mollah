@@ -17,7 +17,7 @@ export default function ProductCard({ id, name, price, image, category }: Produc
     <Link href={`/product/${id}`} className="group">
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
         {/* Product Image */}
-        <div className="relative h-40 sm:h-48 lg:h-52 overflow-hidden">
+        <div className="relative h-32 sm:h-40 lg:h-48 xl:h-52 overflow-hidden">
           <ProductImage
             src={image}
             alt={name}
@@ -32,11 +32,11 @@ export default function ProductCard({ id, name, price, image, category }: Produc
         </div>
         
         {/* Product Info */}
-        <div className="p-3 sm:p-4">
-          <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors text-sm sm:text-base text-subheading">
+        <div className="p-2 sm:p-3 lg:p-4">
+          <h3 className="font-semibold text-gray-800 mb-1 sm:mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors text-xs sm:text-sm lg:text-base text-subheading">
             {name}
           </h3>
-          <p className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600 text-heading">
+          <p className="text-sm sm:text-lg lg:text-xl xl:text-2xl font-bold text-blue-600 text-heading">
             {price.toLocaleString('ar-SA')} ريال
           </p>
         </div>

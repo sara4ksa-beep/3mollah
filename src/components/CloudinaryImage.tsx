@@ -1,7 +1,10 @@
 'use client';
 
 import { CldImage } from 'next-cloudinary';
+import Image from 'next/image';
 import { useState } from 'react';
+
+
 
 interface CloudinaryImageProps {
   src: string;
@@ -31,7 +34,10 @@ export default function CloudinaryImage({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  // Validate URL
+  // Debug logging
+  console.log('CloudinaryImage props:', { src, alt, width, height });
+
+  // Validate URL and determine if it's a Cloudinary public ID or external URL
   const isValidUrl = (url: string) => {
     if (!url || url.trim() === '') return false;
     try {
@@ -39,8 +45,23 @@ export default function CloudinaryImage({
       return true;
     } catch {
       // If it's not a valid URL, check if it's a Cloudinary public ID
-      return /^[a-zA-Z0-9_-]+$/.test(url) || url.includes('cloudinary.com');
+      // Cloudinary public IDs can contain letters, numbers, underscores, hyphens, and forward slashes
+      return /^[a-zA-Z0-9_\/-]+$/.test(url) || url.includes('cloudinary.com');
     }
+  };
+
+  // Check if the URL is a Cloudinary public ID (not a full URL)
+  const isCloudinaryPublicId = (url: string) => {
+    // Cloudinary public IDs can contain letters, numbers, underscores, hyphens, and forward slashes
+    // They don't start with http/https and don't contain cloudinary.com
+    const result = /^[a-zA-Z0-9_\/-]+$/.test(url) && !url.includes('http') && !url.includes('cloudinary.com');
+    console.log('isCloudinaryPublicId check:', { url, result });
+    return result;
+  };
+
+  // Check if the URL is a full Cloudinary URL
+  const isCloudinaryUrl = (url: string) => {
+    return url.includes('res.cloudinary.com');
   };
 
   // Handle loading state
@@ -56,6 +77,7 @@ export default function CloudinaryImage({
 
   // If no valid src, show placeholder
   if (!isValidUrl(src)) {
+    console.warn('Invalid image URL:', src);
     return (
       <div 
         className={`bg-gray-200 flex items-center justify-center ${className}`}
@@ -87,24 +109,61 @@ export default function CloudinaryImage({
         />
       )}
       
-      {/* Cloudinary Image */}
-      <CldImage
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        quality={quality}
-        crop={crop}
-        priority={priority}
-        placeholder={placeholder}
-        blurDataURL={blurDataURL}
-        onLoad={handleLoad}
-        onError={handleError}
-        className={`transition-opacity duration-300 ${
-          isLoading ? 'opacity-0' : 'opacity-100'
-        }`}
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-      />
+      {/* Render appropriate image component based on URL type */}
+      {isCloudinaryPublicId(src) ? (
+        // Cloudinary public ID - use CldImage
+        <CldImage
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          quality={quality}
+          crop={crop}
+          priority={priority}
+          placeholder={placeholder}
+          blurDataURL={blurDataURL}
+          onLoad={handleLoad}
+          onError={handleError}
+          className={`transition-opacity duration-300 ${
+            isLoading ? 'opacity-0' : 'opacity-100'
+          }`}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+      ) : isCloudinaryUrl(src) ? (
+        // Full Cloudinary URL - use Next.js Image
+        <Image
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          quality={quality}
+          priority={priority}
+          placeholder="empty"
+          onLoad={handleLoad}
+          onError={handleError}
+          className={`transition-opacity duration-300 ${
+            isLoading ? 'opacity-0' : 'opacity-100'
+          }`}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+      ) : (
+        // External URL - use Next.js Image
+        <Image
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          quality={quality}
+          priority={priority}
+          placeholder="empty"
+          onLoad={handleLoad}
+          onError={handleError}
+          className={`transition-opacity duration-300 ${
+            isLoading ? 'opacity-0' : 'opacity-100'
+          }`}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+      )}
     </div>
   );
 }
