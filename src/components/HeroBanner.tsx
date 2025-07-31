@@ -7,7 +7,7 @@ export default function HeroBanner() {
   return (
     <section className="relative bg-gradient-to-r from-gray-800 to-gray-900 text-white overflow-hidden">
       {/* Hero Banner Container - Responsive Height */}
-      <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[700px]">
+      <div className="relative w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] xl:h-[450px]">
         {/* Background Image */}
         <Image
           src="/ph.png"
