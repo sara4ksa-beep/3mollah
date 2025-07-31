@@ -22,7 +22,7 @@ export default function HeroBanner() {
     },
     {
       id: 2,
-      image: "/ggi.png",
+      image: "/nner.png",
       alt: "الربح من متجر العمولة",
       title: "اربح بسهولة مع متجر العمولة",
       subtitle: "المورد يتكفّل بالشحن و التخزين وأنت تربح من تسويق متجرك",
