@@ -25,8 +25,8 @@ export default function HeroBanner() {
       image: "/ggi.png",
       alt: "الربح من متجر العمولة",
       title: "اربح بسهولة مع متجر العمولة",
-      subtitle: "المورد يتكفّل الشحن و التخزين و أنت تربح من تسويق متجرك",
-      gradient: "from-blue-600/60 via-blue-600/40 to-blue-800/60 sm:from-blue-600/50 sm:via-blue-600/30 sm:to-blue-800/50",
+      subtitle: "المورد يتكفّل بالشحن و التخزين وأنت تربح من تسويق متجرك",
+      gradient: "from-black/20 via-black/10 to-black/20",
       buttons: [
         { text: "ابدأ الربح الآن", href: "/products", style: "bg-white text-blue-600 hover:bg-gray-100" },
         { text: "تواصل معنا", href: "/contact", style: "border-2 border-white text-white hover:bg-white hover:text-blue-600" }
