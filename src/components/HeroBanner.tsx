@@ -26,7 +26,7 @@ export default function HeroBanner() {
       alt: "الربح من متجر العمولة",
       title: "اربح بسهولة مع متجر العمولة",
       subtitle: "المورد يتكفّل بالشحن و التخزين وأنت تربح من تسويق متجرك",
-      gradient: "from-black/20 via-black/10 to-black/20",
+      gradient: "from-black/40 via-black/30 to-black/40",
       buttons: [
         { text: "ابدأ الربح الآن", href: "/products", style: "bg-white text-blue-600 hover:bg-gray-100" },
         { text: "تواصل معنا", href: "/contact", style: "border-2 border-white text-white hover:bg-white hover:text-blue-600" }
