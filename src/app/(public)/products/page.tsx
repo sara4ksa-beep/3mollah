@@ -34,8 +34,8 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     ];
   }
 
-  // Fetch products with pagination
-  const [products, total] = await Promise.all([
+  // Fetch products with pagination and category info
+  const [products, total, selectedCategory] = await Promise.all([
     prisma.product.findMany({
       where,
       include: {
@@ -47,7 +47,11 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
       skip,
       take: limit
     }),
-    prisma.product.count({ where })
+    prisma.product.count({ where }),
+    category ? prisma.category.findUnique({
+      where: { id: category },
+      select: { name: true }
+    }) : null
   ]);
 
   const totalPages = Math.ceil(total / limit);
@@ -66,10 +70,13 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           </Link>
           
           <h1 className="text-4xl font-bold text-gray-800 mb-2 text-heading">
-            جميع المنتجات
+            {selectedCategory ? `منتجات ${selectedCategory.name}` : 'جميع المنتجات'}
           </h1>
           <p className="text-gray-600 text-lg text-body">
-            اكتشف مجموعتنا الكاملة من المنتجات المميزة
+            {selectedCategory 
+              ? `اكتشف منتجات ${selectedCategory.name} المميزة`
+              : 'اكتشف مجموعتنا الكاملة من المنتجات المميزة'
+            }
           </p>
         </div>
 
@@ -85,11 +92,9 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 {' '}للبحث: <span className="font-semibold text-blue-600">&ldquo;{search}&rdquo;</span>
               </>
             )}
-            {category && (
+            {selectedCategory && (
               <>
-                {' '}في الفئة: <span className="font-semibold text-blue-600">
-                  {products[0]?.category?.name || 'غير محدد'}
-                </span>
+                {' '}في الفئة: <span className="font-semibold text-blue-600">{selectedCategory.name}</span>
               </>
             )}
           </p>
@@ -162,12 +167,12 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 لا توجد منتجات
               </h3>
               <p className="text-gray-600 text-body">
-                {search || category 
+                {search || selectedCategory 
                   ? 'لم يتم العثور على منتجات تطابق معايير البحث'
                   : 'لا توجد منتجات متاحة حالياً'
                 }
               </p>
-              {(search || category) && (
+              {(search || selectedCategory) && (
                 <Link
                   href="/products"
                   className="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
