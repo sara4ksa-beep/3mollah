@@ -122,6 +122,107 @@ const sampleProducts = [
     externalLink: "https://amzn.to/3example12",
     features: ["أفضل إلغاء ضوضاء", "بطارية 30 ساعة", "جودة صوت عالية", "شحن سريع"],
     categoryName: "الإلكترونيات"
+  },
+  // المنتجات الجديدة المضافة
+  {
+    name: "ساعة Samsung Galaxy Watch 6",
+    description: "ساعة ذكية متطورة مع نظام Android Wear، شاشة AMOLED، تتبع صحي شامل، مقاومة للماء",
+    price: 1299,
+    originalPrice: 1699,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&h=500&fit=crop",
+    externalLink: "https://amzn.to/3example13",
+    features: ["شاشة AMOLED", "تتبع صحي", "مقاومة للماء", "بطارية طويلة"],
+    categoryName: "الإلكترونيات"
+  },
+  {
+    name: "كاميرا GoPro Hero 11",
+    description: "كاميرا أكشن متطورة، تصوير فيديو 5.3K، مقاومة للماء والصدمات، مثالية للمغامرات",
+    price: 2499,
+    originalPrice: 2999,
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500&h=500&fit=crop",
+    externalLink: "https://amzn.to/3example14",
+    features: ["فيديو 5.3K", "مقاومة للماء", "تصوير بطيء", "شاشة لمس"],
+    categoryName: "الإلكترونيات"
+  },
+  {
+    name: "عطر Dior Sauvage",
+    description: "عطر رجالي عصري، رائحة منعشة وقوية، مناسب للاستخدام اليومي والمناسبات",
+    price: 799,
+    originalPrice: 1099,
+    image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&h=500&fit=crop",
+    externalLink: "https://amzn.to/3example15",
+    features: ["رائحة منعشة", "يدوم طويلاً", "مناسب للرجال", "عبوة أنيقة"],
+    categoryName: "الجمال والعناية"
+  },
+  {
+    name: "مجموعة أدوات تجميل Dior",
+    description: "مجموعة فاخرة من أدوات التجميل، تشمل أحمر شفاه وظلال عيون وكونسيلر عالي الجودة",
+    price: 899,
+    originalPrice: 1299,
+    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=500&h=500&fit=crop",
+    externalLink: "https://amzn.to/3example16",
+    features: ["ألوان فاخرة", "جودة عالية", "مناسبة للبشرة الحساسة", "حقيبة فاخرة"],
+    categoryName: "الجمال والعناية"
+  },
+  {
+    name: "ساعة Cartier Tank",
+    description: "ساعة فاخرة كلاسيكية، تصميم مستطيل أنيق، حركة أوتوماتيكية، مناسبة للمناسبات الرسمية",
+    price: 25999,
+    originalPrice: 32999,
+    image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500&h=500&fit=crop",
+    externalLink: "https://amzn.to/3example17",
+    features: ["تصميم كلاسيكي", "حركة أوتوماتيكية", "سوار جلد", "مناسبة للمناسبات"],
+    categoryName: "الإكسسوارات"
+  },
+  {
+    name: "حقيبة Gucci Marmont",
+    description: "حقيبة فاخرة مع تصميم GG المميز، جلد عالي الجودة، مناسبة للعمل والحفلات",
+    price: 12999,
+    originalPrice: 15999,
+    image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&h=500&fit=crop",
+    externalLink: "https://amzn.to/3example18",
+    features: ["جلد عالي الجودة", "تصميم GG", "حجم متوسط", "مناسبة للحفلات"],
+    categoryName: "الإكسسوارات"
+  },
+  {
+    name: "نظارة Prada Linea Rossa",
+    description: "نظارة شمسية رياضية، عدسات مستقطبة، إطار أسود أنيق، مناسبة للرياضة واليومية",
+    price: 1299,
+    originalPrice: 1699,
+    image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&h=500&fit=crop",
+    externalLink: "https://amzn.to/3example19",
+    features: ["عدسات مستقطبة", "إطار رياضي", "حماية من الأشعة", "مناسبة للرياضة"],
+    categoryName: "الإكسسوارات"
+  },
+  {
+    name: "عطر Yves Saint Laurent Black Opium",
+    description: "عطر نسائي جريء، رائحة غامقة ومثيرة، مناسب للحفلات والمناسبات الخاصة",
+    price: 999,
+    originalPrice: 1399,
+    image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&h=500&fit=crop",
+    externalLink: "https://amzn.to/3example20",
+    features: ["رائحة جريئة", "يدوم طويلاً", "مناسب للحفلات", "عبوة فاخرة"],
+    categoryName: "الجمال والعناية"
+  },
+  {
+    name: "سماعات Bose QuietComfort 45",
+    description: "سماعات لاسلكية مع إلغاء ضوضاء متقدم، جودة صوت عالية، راحة طويلة الأمد",
+    price: 1099,
+    originalPrice: 1399,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop",
+    externalLink: "https://amzn.to/3example21",
+    features: ["إلغاء ضوضاء متقدم", "جودة صوت عالية", "راحة طويلة", "بطارية 24 ساعة"],
+    categoryName: "الإلكترونيات"
+  },
+  {
+    name: "لابتوب Dell XPS 13",
+    description: "لابتوب فاخر مع شاشة InfinityEdge، معالج Intel Core i7، تصميم أنيق وخفيف الوزن",
+    price: 3999,
+    originalPrice: 4999,
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop",
+    externalLink: "https://amzn.to/3example22",
+    features: ["شاشة InfinityEdge", "معالج Core i7", "تصميم أنيق", "خفيف الوزن"],
+    categoryName: "الإلكترونيات"
   }
 ];
 

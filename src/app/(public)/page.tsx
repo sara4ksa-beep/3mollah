@@ -1,6 +1,5 @@
 import HeroBanner from '@/components/HeroBanner';
 import ProductCard from '@/components/ProductCard';
-import SearchAndFilter from '@/components/SearchAndFilter';
 import CustomerReviews from '@/components/CustomerReviews';
 import { prisma } from '@/lib/prisma';
 
@@ -51,9 +50,6 @@ export default async function Home({ searchParams }: HomePageProps) {
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-gray-800 mb-8 md:mb-12 text-heading">
             منتجاتنا المميزة
           </h2>
-          
-          {/* Search and Filter Controls */}
-          <SearchAndFilter />
           
           {/* Products Grid */}
           {products.length > 0 ? (
