@@ -3,6 +3,44 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom styles for Hero Banner */
+.hero-banner {
+  aspect-ratio: 16/9;
+  min-height: 400px;
+  max-height: 700px;
+}
+
+@media (max-width: 640px) {
+  .hero-banner {
+    aspect-ratio: 4/3;
+    min-height: 350px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .hero-banner {
+    aspect-ratio: 3/2;
+    min-height: 450px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .hero-banner {
+    aspect-ratio: 16/9;
+    min-height: 600px;
+  }
+}
+
+/* Ensure text is always readable */
+.hero-text-shadow {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Smooth transitions */
+.hero-transition {
+  transition: all 0.3s ease-in-out;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -338,7 +376,7 @@ select {
   color: #000000 !important;
 }
 
-/* إصلاح لون النص في حقول الإدخال في جميع المتصفحات */
+/* إصلاح لون النص في حقول الإدخال عند التركيز */
 input::placeholder,
 textarea::placeholder {
   color: #6b7280 !important;
