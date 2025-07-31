@@ -41,9 +41,9 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-4 space-x-reverse">
+          <nav className="hidden md:flex items-center">
             {/* Categories Dropdown */}
-            <div className="relative">
+            <div className="relative ml-6">
               <button
                 onClick={toggleCategories}
                 className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
@@ -72,7 +72,7 @@ export default function Header() {
             {/* Search Button */}
             <Link 
               href="/products" 
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors ml-6"
             >
               <span className="font-bold">البحث</span>
               <Search size={18} />
@@ -80,7 +80,7 @@ export default function Header() {
             
             <Link 
               href="/contact" 
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors ml-6"
             >
               <span className="font-bold">اتصل بنا</span>
               <Mail size={18} />
@@ -88,7 +88,7 @@ export default function Header() {
             
             <Link 
               href="/" 
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors ml-6"
             >
               <span className="font-bold">الرئيسية</span>
               <Home size={18} />
