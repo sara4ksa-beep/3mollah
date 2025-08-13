@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && prisma db push && next build",
     "seed": "npx tsx scripts/seed.ts",
     "clear-products": "npx tsx scripts/clear-products.ts"
   },

@@ -7,9 +7,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    serverExternalPackages: ['@prisma/client', 'bcryptjs'],
-  },
   images: {
     remotePatterns: [
       {
@@ -47,7 +44,17 @@ const nextConfig: NextConfig = {
         os: false,
       };
     }
+    
+    // Add Prisma client generation
+    if (isServer) {
+      config.externals = [...(config.externals || []), '@prisma/client'];
+    }
+    
     return config;
+  },
+  // Add environment variable handling
+  env: {
+    PRISMA_GENERATE_DATAPROXY: 'true',
   },
 };
 
