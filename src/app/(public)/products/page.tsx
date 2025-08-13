@@ -1,199 +1,275 @@
 'use client';
 
+import { useState, Suspense } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useProducts, useProductSearch } from '@/lib/swr';
 import ProductCard from '@/components/ProductCard';
 import SearchAndFilter from '@/components/SearchAndFilter';
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
-import { useProducts, useProductSearch } from '@/lib/swr';
-import { useState, Suspense } from 'react';
 
-function ProductsContent() {
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { 
+    opacity: 0, 
+    y: 20,
+    scale: 0.95
+  },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut" as const
+    }
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+    scale: 0.95,
+    transition: {
+      duration: 0.3
+    }
+  }
+};
+
+const pageVariants = {
+  initial: { opacity: 0, x: -20 },
+  in: { opacity: 1, x: 0 },
+  out: { opacity: 0, x: 20 }
+};
+
+const pageTransition = {
+  type: "tween" as const,
+  ease: "anticipate" as const,
+  duration: 0.5
+};
+
+export default function ProductsPage() {
+  const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const limit = 12;
+  const [filters, setFilters] = useState({});
 
-  // Use SWR hooks for data fetching
-  const { data: productsData, error: productsError, isLoading: productsLoading } = useProducts(currentPage, limit);
-  const { data: searchData, error: searchError, isLoading: searchLoading } = useProductSearch(searchQuery, {});
+  const { data: productsData, error: productsError, isLoading: productsLoading } = useProducts(page);
+  const { data: searchData, error: searchError, isLoading: searchLoading } = useProductSearch(searchQuery, filters);
 
-  // Determine which data to use
-  const isSearching = searchQuery.length > 0;
-  const data = isSearching ? searchData : productsData;
-  const error = isSearching ? searchError : productsError;
-  const isLoading = isSearching ? searchLoading : productsLoading;
-
-  const products = data?.products || data?.hits || [];
-  const total = data?.total || 0;
-  const totalPages = data?.totalPages || Math.ceil(total / limit);
+  const isLoading = productsLoading || searchLoading;
+  const error = productsError || searchError;
+  
+  // Use search results if there's a search query, otherwise use paginated products
+  const data = searchQuery ? searchData : productsData;
+  const products = data?.hits || data?.products || [];
+  const totalPages = data?.totalPages || data?.totalPages || 1;
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    setCurrentPage(1);
+    setPage(1); // Reset to first page on new search
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">حدث خطأ</h2>
-          <p className="text-gray-600 mb-4">فشل في تحميل المنتجات</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-          >
-            إعادة المحاولة
-          </button>
+      <motion.div
+        initial="initial"
+        animate="in"
+        exit="out"
+        variants={pageVariants}
+        transition={pageTransition}
+        className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+              className="mx-auto h-12 w-12 text-red-400"
+            >
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </motion.div>
+            <h2 className="mt-4 text-lg font-medium text-gray-900">حدث خطأ</h2>
+            <p className="mt-2 text-sm text-gray-500">فشل في تحميل المنتجات. يرجى المحاولة مرة أخرى.</p>
+          </div>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+    <motion.div
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={pageTransition}
+      className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8"
+    >
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <Link 
-            href="/" 
-            className="inline-flex items-center space-x-2 space-x-reverse text-blue-600 hover:text-blue-700 mb-4 text-body"
-          >
-            <ArrowLeft size={20} />
-            <span>العودة للرئيسية</span>
-          </Link>
-          
-          <h1 className="text-4xl font-bold text-gray-800 mb-2 text-heading">
-            جميع المنتجات
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            منتجاتنا
           </h1>
-          <p className="text-gray-600 text-lg text-body">
-            اكتشف مجموعتنا الكاملة من المنتجات المميزة
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            اكتشف مجموعة متنوعة من المنتجات عالية الجودة
           </p>
-        </div>
+        </motion.div>
 
-        {/* Search Controls */}
-        <SearchAndFilter onSearch={handleSearch} />
-        
-        {/* Results Summary */}
-        <div className="mb-6">
-          <p className="text-gray-600 text-body">
-            تم العثور على <span className="font-semibold text-blue-600">{total}</span> منتج
-            {searchQuery && (
-              <>
-                {' '}للبحث: <span className="font-semibold text-blue-600">&ldquo;{searchQuery}&rdquo;</span>
-              </>
-            )}
-          </p>
-        </div>
+        {/* Search and Filter */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-8"
+        >
+          <SearchAndFilter onSearch={handleSearch} />
+        </motion.div>
 
-        {/* Loading State */}
+        {/* Loading Skeleton */}
         {isLoading && (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-8">
-            {Array.from({ length: limit }).map((_, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-4 animate-pulse">
-                <div className="bg-gray-200 h-32 sm:h-40 lg:h-48 xl:h-52 rounded mb-3"></div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          >
+            {[...Array(8)].map((_, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-lg shadow-md p-6 animate-pulse"
+              >
+                <div className="bg-gray-200 h-48 rounded-md mb-4"></div>
                 <div className="bg-gray-200 h-4 rounded mb-2"></div>
+                <div className="bg-gray-200 h-4 rounded mb-2 w-3/4"></div>
                 <div className="bg-gray-200 h-6 rounded w-1/2"></div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
 
         {/* Products Grid */}
         {!isLoading && products.length > 0 && (
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-8">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12"
+          >
+            <AnimatePresence>
               {products.map((product: any) => (
-                <ProductCard
+                <motion.div
                   key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  price={product.price}
-                  image={product.image}
-                />
-              ))}
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center space-x-2 space-x-reverse">
-                {currentPage > 1 && (
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    السابق
-                  </button>
-                )}
-                
-                <span className="px-4 py-2 text-gray-600">
-                  صفحة {currentPage} من {totalPages}
-                </span>
-                
-                {currentPage < totalPages && (
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    التالي
-                  </button>
-                )}
-              </div>
-            )}
-          </>
-        )}
-
-        {/* Empty State */}
-        {!isLoading && products.length === 0 && (
-          <div className="text-center py-16">
-            <div className="max-w-md mx-auto">
-              <div className="text-gray-400 mb-4">
-                <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2 text-heading">
-                لا توجد منتجات
-              </h3>
-              <p className="text-gray-600 text-body">
-                {searchQuery 
-                  ? 'لم يتم العثور على منتجات تطابق معايير البحث'
-                  : 'لا توجد منتجات متاحة حالياً'
-                }
-              </p>
-              {searchQuery && (
-                <button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setCurrentPage(1);
+                  variants={itemVariants}
+                  layout
+                  whileHover={{ 
+                    y: -8,
+                    scale: 1.02,
+                    transition: { duration: 0.2 }
                   }}
-                  className="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  whileTap={{ scale: 0.98 }}
                 >
-                  عرض جميع المنتجات
-                </button>
-              )}
+                  <ProductCard
+                    id={product.id}
+                    name={product.name}
+                    price={product.price}
+                    image={product.image}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
+
+        {/* No Products */}
+        {!isLoading && products.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-center py-12"
+          >
+            <div className="mx-auto h-24 w-24 text-gray-400 mb-4">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+              </svg>
             </div>
-          </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">لا توجد منتجات</h3>
+            <p className="text-gray-500">جرب تغيير معايير البحث أو الفلترة</p>
+          </motion.div>
+        )}
+
+        {/* Pagination */}
+        {!isLoading && totalPages > 1 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="flex justify-center items-center space-x-2 rtl:space-x-reverse"
+          >
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page === 1}
+              className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              السابق
+            </motion.button>
+            
+            {[...Array(totalPages)].map((_, index) => {
+              const pageNumber = index + 1;
+              return (
+                <motion.button
+                  key={pageNumber}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => handlePageChange(pageNumber)}
+                  className={`px-4 py-2 text-sm font-medium rounded-md ${
+                    page === pageNumber
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  {pageNumber}
+                </motion.button>
+              );
+            })}
+            
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page === totalPages}
+              className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              التالي
+            </motion.button>
+          </motion.div>
         )}
       </div>
-    </div>
-  );
-}
-
-export default function ProductsPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">جاري التحميل...</p>
-        </div>
-      </div>
-    }>
-      <ProductsContent />
-    </Suspense>
+    </motion.div>
   );
 } 

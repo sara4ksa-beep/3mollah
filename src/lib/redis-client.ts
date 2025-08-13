@@ -133,7 +133,7 @@ export const redis = {
 
   // Mock setEx function
   async setEx(key: string, seconds: number, value: string): Promise<void> {
-    return this.set(key, value, seconds);
+    return redis.set(key, value, seconds);
   },
 
   // Mock TTL function
