@@ -6,7 +6,6 @@ import Link from 'next/link';
 
 interface ProductsPageProps {
   searchParams: Promise<{
-    category?: string;
     search?: string;
     page?: string;
     sortBy?: string;
@@ -15,17 +14,13 @@ interface ProductsPageProps {
 }
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-  const { category, search, page = '1', sortBy = 'createdAt', sortOrder = 'desc' } = await searchParams;
+  const { search, page = '1', sortBy = 'createdAt', sortOrder = 'desc' } = await searchParams;
   const currentPage = parseInt(page);
   const limit = 12;
   const skip = (currentPage - 1) * limit;
 
   // Build where clause
-  const where: { isActive: boolean; categoryId?: string; OR?: Array<{ name: { contains: string; mode: 'insensitive' }; } | { description: { contains: string; mode: 'insensitive' }; }> } = { isActive: true };
-  
-  if (category) {
-    where.categoryId = category;
-  }
+  const where: { isActive: boolean; OR?: Array<{ name: { contains: string; mode: 'insensitive' }; } | { description: { contains: string; mode: 'insensitive' }; }> } = { isActive: true };
   
   if (search) {
     where.OR = [
@@ -34,24 +29,15 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     ];
   }
 
-  // Fetch products with pagination and category info
-  const [products, total, selectedCategory] = await Promise.all([
+  // Fetch products with pagination
+  const [products, total] = await Promise.all([
     prisma.product.findMany({
       where,
-      include: {
-        category: {
-          select: { id: true, name: true, slug: true }
-        }
-      },
       orderBy: { [sortBy]: sortOrder },
       skip,
       take: limit
     }),
-    prisma.product.count({ where }),
-    category ? prisma.category.findUnique({
-      where: { id: category },
-      select: { name: true }
-    }) : null
+    prisma.product.count({ where })
   ]);
 
   const totalPages = Math.ceil(total / limit);
@@ -70,17 +56,14 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           </Link>
           
           <h1 className="text-4xl font-bold text-gray-800 mb-2 text-heading">
-            {selectedCategory ? `منتجات ${selectedCategory.name}` : 'جميع المنتجات'}
+            جميع المنتجات
           </h1>
           <p className="text-gray-600 text-lg text-body">
-            {selectedCategory 
-              ? `اكتشف منتجات ${selectedCategory.name} المميزة`
-              : 'اكتشف مجموعتنا الكاملة من المنتجات المميزة'
-            }
+            اكتشف مجموعتنا الكاملة من المنتجات المميزة
           </p>
         </div>
 
-        {/* Search and Filter Controls */}
+        {/* Search Controls */}
         <SearchAndFilter />
         
         {/* Results Summary */}
@@ -90,11 +73,6 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             {search && (
               <>
                 {' '}للبحث: <span className="font-semibold text-blue-600">&ldquo;{search}&rdquo;</span>
-              </>
-            )}
-            {selectedCategory && (
-              <>
-                {' '}في الفئة: <span className="font-semibold text-blue-600">{selectedCategory.name}</span>
               </>
             )}
           </p>
@@ -111,7 +89,6 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                   name={product.name}
                   price={product.price}
                   image={product.image}
-                  category={product.category?.name}
                 />
               ))}
             </div>
@@ -123,7 +100,6 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                   <Link
                     href={`/products?${new URLSearchParams({
                       ...(search && { search }),
-                      ...(category && { category }),
                       page: (currentPage - 1).toString(),
                       sortBy,
                       sortOrder
@@ -142,7 +118,6 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                   <Link
                     href={`/products?${new URLSearchParams({
                       ...(search && { search }),
-                      ...(category && { category }),
                       page: (currentPage + 1).toString(),
                       sortBy,
                       sortOrder
@@ -167,12 +142,12 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 لا توجد منتجات
               </h3>
               <p className="text-gray-600 text-body">
-                {search || selectedCategory 
+                {search 
                   ? 'لم يتم العثور على منتجات تطابق معايير البحث'
                   : 'لا توجد منتجات متاحة حالياً'
                 }
               </p>
-              {(search || selectedCategory) && (
+              {search && (
                 <Link
                   href="/products"
                   className="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"

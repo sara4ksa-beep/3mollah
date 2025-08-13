@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { Tag } from 'lucide-react';
 import { ProductImage } from './CloudinaryImage';
 
 interface ProductCardProps {
@@ -9,10 +8,9 @@ interface ProductCardProps {
   name: string;
   price: number;
   image: string;
-  category?: string;
 }
 
-export default function ProductCard({ id, name, price, image, category }: ProductCardProps) {
+export default function ProductCard({ id, name, price, image }: ProductCardProps) {
   return (
     <Link href={`/product/${id}`} className="group">
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -23,12 +21,6 @@ export default function ProductCard({ id, name, price, image, category }: Produc
             alt={name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          {category && (
-            <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-              <Tag size={12} />
-              <span className="hidden sm:inline">{category}</span>
-            </div>
-          )}
         </div>
         
         {/* Product Info */}

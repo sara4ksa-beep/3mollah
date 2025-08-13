@@ -1,6 +1,8 @@
 'use client';
 
 import { Phone, Mail, MapPin, Send } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebook, faInstagram, faXTwitter, faTiktok, faYoutube } from '@fortawesome/free-brands-svg-icons';
 
 export default function ContactPage() {
   return (
@@ -61,24 +63,50 @@ export default function ContactPage() {
               {/* Social Media */}
               <div className="pt-6">
                 <h3 className="font-semibold text-gray-800 mb-4">تابعنا على وسائل التواصل الاجتماعي</h3>
-                <div className="flex space-x-4 space-x-reverse">
-                  <a href="#" className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-colors">
-                    <span className="sr-only">فيسبوك</span>
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                    </svg>
+                <div className="flex flex-wrap gap-4">
+                  {/* Facebook */}
+                  <a 
+                    href="#" 
+                    className="bg-blue-600 text-white p-4 rounded-full hover:bg-blue-700 transition-all duration-300 hover:scale-110 hover:shadow-lg"
+                    title="فيسبوك"
+                  >
+                    <FontAwesomeIcon icon={faFacebook} className="w-7 h-7" />
                   </a>
-                  <a href="#" className="bg-pink-600 text-white p-3 rounded-full hover:bg-pink-700 transition-colors">
-                    <span className="sr-only">إنستقرام</span>
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.323-1.297C4.198 14.895 3.708 13.744 3.708 12.447s.49-2.448 1.418-3.323c.875-.807 2.026-1.297 3.323-1.297s2.448.49 3.323 1.297c.928.875 1.418 2.026 1.418 3.323s-.49 2.448-1.418 3.244c-.875.807-2.026 1.297-3.323 1.297zm7.83-9.781c-.49 0-.928-.175-1.297-.49-.368-.315-.49-.753-.49-1.243 0-.49.122-.928.49-1.243.369-.315.807-.49 1.297-.49s.928.175 1.297.49c.368.315.49.753.49 1.243 0 .49-.122.928-.49 1.243-.369.315-.807.49-1.297.49z"/>
-                    </svg>
+
+                  {/* Instagram */}
+                  <a 
+                    href="#" 
+                    className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white p-4 rounded-full hover:scale-110 transition-all duration-300 hover:shadow-lg"
+                    title="انستقرام"
+                  >
+                    <FontAwesomeIcon icon={faInstagram} className="w-7 h-7" />
                   </a>
-                  <a href="#" className="bg-blue-400 text-white p-3 rounded-full hover:bg-blue-500 transition-colors">
-                    <span className="sr-only">سناب شات</span>
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.323-1.297C4.198 14.895 3.708 13.744 3.708 12.447s.49-2.448 1.418-3.323c.875-.807 2.026-1.297 3.323-1.297s2.448.49 3.323 1.297c.928.875 1.418 2.026 1.418 3.323s-.49 2.448-1.418 3.244c-.875.807-2.026 1.297-3.323 1.297zm7.83-9.781c-.49 0-.928-.175-1.297-.49-.368-.315-.49-.753-.49-1.243 0-.49.122-.928.49-1.243.369-.315.807-.49 1.297-.49s.928.175 1.297.49c.368.315.49.753.49 1.243 0 .49-.122.928-.49 1.243-.369.315-.807.49-1.297.49z"/>
-                    </svg>
+
+                  {/* X (Twitter) */}
+                  <a 
+                    href="#" 
+                    className="bg-black text-white p-4 rounded-full hover:bg-gray-800 transition-all duration-300 hover:scale-110 hover:shadow-lg"
+                    title="إكس (تويتر)"
+                  >
+                    <FontAwesomeIcon icon={faXTwitter} className="w-7 h-7" />
+                  </a>
+
+                  {/* TikTok */}
+                  <a 
+                    href="#" 
+                    className="bg-black text-white p-4 rounded-full hover:bg-gray-800 transition-all duration-300 hover:scale-110 hover:shadow-lg"
+                    title="تيك توك"
+                  >
+                    <FontAwesomeIcon icon={faTiktok} className="w-7 h-7" />
+                  </a>
+
+                  {/* YouTube */}
+                  <a 
+                    href="#" 
+                    className="bg-red-600 text-white p-4 rounded-full hover:bg-red-700 transition-all duration-300 hover:scale-110 hover:shadow-lg"
+                    title="يوتيوب"
+                  >
+                    <FontAwesomeIcon icon={faYoutube} className="w-7 h-7" />
                   </a>
                 </div>
               </div>
