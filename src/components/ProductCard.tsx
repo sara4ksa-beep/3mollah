@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ProductImage } from './CloudinaryImage';
+import { formatPriceWithCurrency } from '@/utils/numbers';
 
 interface ProductCardProps {
   id: string;
@@ -29,7 +30,7 @@ export default function ProductCard({ id, name, price, image }: ProductCardProps
             {name}
           </h3>
           <p className="text-sm sm:text-lg lg:text-xl xl:text-2xl font-bold text-blue-600 text-heading">
-            {price.toLocaleString('ar-SA')} ريال
+            {formatPriceWithCurrency(price)}
           </p>
         </div>
       </div>

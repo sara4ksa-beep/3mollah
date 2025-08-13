@@ -1,7 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Package, Plus, Edit, Trash2, Eye, Filter, Search } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Plus, 
+  Search, 
+  Filter, 
+  Edit, 
+  Trash2, 
+  Eye, 
+  Package,
+  X,
+  Save,
+  Loader2
+} from 'lucide-react';
+import { formatPriceWithCurrency } from '@/utils/numbers';
 import AdminSidebar from '@/components/AdminSidebar';
 import ImageUpload from '@/components/ImageUpload';
 import { ThumbnailImage } from '@/components/CloudinaryImage';
@@ -573,9 +586,9 @@ export default function ProductsPage() {
                       </td>
                       <td className="py-3 px-4">
                         <div>
-                          <p className="font-medium text-gray-800">{product.price} ريال</p>
+                          <p className="font-medium text-gray-800">{formatPriceWithCurrency(product.price)}</p>
                           {product.originalPrice && product.originalPrice > product.price && (
-                            <p className="text-sm text-gray-500 line-through">{product.originalPrice} ريال</p>
+                            <p className="text-sm text-gray-500 line-through">{formatPriceWithCurrency(product.originalPrice)}</p>
                           )}
                         </div>
                       </td>

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import BuyButton from '@/components/BuyButton';
 import { ProductImage } from '@/components/CloudinaryImage';
+import { formatPriceWithCurrency } from '@/utils/numbers';
 
 interface ProductPageProps {
   params: Promise<{
@@ -51,7 +52,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   {product.name}
                 </h1>
                 <p className="text-3xl font-bold text-blue-600 text-heading">
-                  {product.price.toLocaleString('ar-SA')} ريال
+                  {formatPriceWithCurrency(product.price)}
                 </p>
               </div>
 

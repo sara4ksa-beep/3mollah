@@ -61,7 +61,6 @@ export default async function Home({ searchParams }: HomePageProps) {
                   name={product.name}
                   price={product.price}
                   image={product.image}
-                  category={product.category?.name}
                 />
               ))}
             </div>
