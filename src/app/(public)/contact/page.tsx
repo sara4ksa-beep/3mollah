@@ -110,6 +110,24 @@ export default function ContactPage() {
                   </a>
                 </div>
               </div>
+
+              {/* Commission Store Section */}
+              <div className="pt-8">
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white text-center">
+                  <h3 className="text-xl font-bold mb-3">احصل على متجر العمولة الخاص بك</h3>
+                  <p className="text-blue-100 mb-4">
+                    انضم إلى شبكة التجار الناجحين واحصل على متجر عمولة مخصص لك
+                  </p>
+                  <a 
+                    href="https://abrajsa.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                  >
+                    طلب متجر العمولة
+                  </a>
+                </div>
+              </div>
             </div>
 
             {/* Contact Form */}
