@@ -42,12 +42,38 @@ const nextConfig: NextConfig = {
         fs: false,
         path: false,
         os: false,
+        crypto: false,
+        stream: false,
+        util: false,
+        buffer: false,
+        events: false,
+        net: false,
+        tls: false,
+        timers: false,
+        url: false,
+        querystring: false,
+        zlib: false,
+        http: false,
+        https: false,
+        assert: false,
+        constants: false,
+        domain: false,
+        punycode: false,
+        string_decoder: false,
+        sys: false,
+        vm: false,
+        child_process: false,
+        cluster: false,
+        dgram: false,
+        dns: false,
+        module: false,
+        process: false,
+        readline: false,
+        repl: false,
+        tty: false,
+        v8: false,
+        worker_threads: false,
       };
-    }
-    
-    // Add Prisma client generation
-    if (isServer) {
-      config.externals = [...(config.externals || []), '@prisma/client'];
     }
     
     return config;

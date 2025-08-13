@@ -1,46 +1,57 @@
+'use client';
+
 import ProductCard from '@/components/ProductCard';
 import SearchAndFilter from '@/components/SearchAndFilter';
-import { prisma } from '@/lib/prisma';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { useProducts, useProductSearch } from '@/lib/swr';
+import { useState, Suspense } from 'react';
 
-interface ProductsPageProps {
-  searchParams: Promise<{
-    search?: string;
-    page?: string;
-    sortBy?: string;
-    sortOrder?: string;
-  }>;
-}
-
-export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-  const { search, page = '1', sortBy = 'createdAt', sortOrder = 'desc' } = await searchParams;
-  const currentPage = parseInt(page);
+function ProductsContent() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const limit = 12;
-  const skip = (currentPage - 1) * limit;
 
-  // Build where clause
-  const where: { isActive: boolean; OR?: Array<{ name: { contains: string; mode: 'insensitive' }; } | { description: { contains: string; mode: 'insensitive' }; }> } = { isActive: true };
-  
-  if (search) {
-    where.OR = [
-      { name: { contains: search, mode: 'insensitive' } },
-      { description: { contains: search, mode: 'insensitive' } }
-    ];
+  // Use SWR hooks for data fetching
+  const { data: productsData, error: productsError, isLoading: productsLoading } = useProducts(currentPage, limit);
+  const { data: searchData, error: searchError, isLoading: searchLoading } = useProductSearch(searchQuery, {});
+
+  // Determine which data to use
+  const isSearching = searchQuery.length > 0;
+  const data = isSearching ? searchData : productsData;
+  const error = isSearching ? searchError : productsError;
+  const isLoading = isSearching ? searchLoading : productsLoading;
+
+  const products = data?.products || data?.hits || [];
+  const total = data?.total || 0;
+  const totalPages = data?.totalPages || Math.ceil(total / limit);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">حدث خطأ</h2>
+          <p className="text-gray-600 mb-4">فشل في تحميل المنتجات</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+          >
+            إعادة المحاولة
+          </button>
+        </div>
+      </div>
+    );
   }
-
-  // Fetch products with pagination
-  const [products, total] = await Promise.all([
-    prisma.product.findMany({
-      where,
-      orderBy: { [sortBy]: sortOrder },
-      skip,
-      take: limit
-    }),
-    prisma.product.count({ where })
-  ]);
-
-  const totalPages = Math.ceil(total / limit);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -64,25 +75,38 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         </div>
 
         {/* Search Controls */}
-        <SearchAndFilter />
+        <SearchAndFilter onSearch={handleSearch} />
         
         {/* Results Summary */}
         <div className="mb-6">
           <p className="text-gray-600 text-body">
             تم العثور على <span className="font-semibold text-blue-600">{total}</span> منتج
-            {search && (
+            {searchQuery && (
               <>
-                {' '}للبحث: <span className="font-semibold text-blue-600">&ldquo;{search}&rdquo;</span>
+                {' '}للبحث: <span className="font-semibold text-blue-600">&ldquo;{searchQuery}&rdquo;</span>
               </>
             )}
           </p>
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-8">
+            {Array.from({ length: limit }).map((_, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-md p-4 animate-pulse">
+                <div className="bg-gray-200 h-32 sm:h-40 lg:h-48 xl:h-52 rounded mb-3"></div>
+                <div className="bg-gray-200 h-4 rounded mb-2"></div>
+                <div className="bg-gray-200 h-6 rounded w-1/2"></div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Products Grid */}
-        {products.length > 0 ? (
+        {!isLoading && products.length > 0 && (
           <>
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-8">
-              {products.map((product) => (
+              {products.map((product: any) => (
                 <ProductCard
                   key={product.id}
                   id={product.id}
@@ -97,17 +121,12 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             {totalPages > 1 && (
               <div className="flex justify-center items-center space-x-2 space-x-reverse">
                 {currentPage > 1 && (
-                  <Link
-                    href={`/products?${new URLSearchParams({
-                      ...(search && { search }),
-                      page: (currentPage - 1).toString(),
-                      sortBy,
-                      sortOrder
-                    })}`}
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
                     className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     السابق
-                  </Link>
+                  </button>
                 )}
                 
                 <span className="px-4 py-2 text-gray-600">
@@ -115,22 +134,20 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 </span>
                 
                 {currentPage < totalPages && (
-                  <Link
-                    href={`/products?${new URLSearchParams({
-                      ...(search && { search }),
-                      page: (currentPage + 1).toString(),
-                      sortBy,
-                      sortOrder
-                    })}`}
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
                     className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     التالي
-                  </Link>
+                  </button>
                 )}
               </div>
             )}
           </>
-        ) : (
+        )}
+
+        {/* Empty State */}
+        {!isLoading && products.length === 0 && (
           <div className="text-center py-16">
             <div className="max-w-md mx-auto">
               <div className="text-gray-400 mb-4">
@@ -142,23 +159,41 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 لا توجد منتجات
               </h3>
               <p className="text-gray-600 text-body">
-                {search 
+                {searchQuery 
                   ? 'لم يتم العثور على منتجات تطابق معايير البحث'
                   : 'لا توجد منتجات متاحة حالياً'
                 }
               </p>
-              {search && (
-                <Link
-                  href="/products"
+              {searchQuery && (
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setCurrentPage(1);
+                  }}
                   className="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   عرض جميع المنتجات
-                </Link>
+                </button>
               )}
             </div>
           </div>
         )}
       </div>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">جاري التحميل...</p>
+        </div>
+      </div>
+    }>
+      <ProductsContent />
+    </Suspense>
   );
 } 

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Cairo, Inter, Poppins } from 'next/font/google';
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { Providers } from './providers';
 
 // تكوين الخطوط
 const cairo = Cairo({
@@ -56,7 +55,9 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-gray-50`}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

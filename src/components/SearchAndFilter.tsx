@@ -1,10 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Search, X } from 'lucide-react';
 
-export default function SearchAndFilter() {
+interface SearchAndFilterProps {
+  onSearch: (query: string) => void;
+}
+
+function SearchAndFilterContent({ onSearch }: SearchAndFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -13,11 +17,13 @@ export default function SearchAndFilter() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    onSearch(searchQuery);
     updateURL();
   };
 
   const handleClearSearch = () => {
     setSearchQuery('');
+    onSearch('');
     updateURL('');
   };
 
@@ -68,5 +74,19 @@ export default function SearchAndFilter() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function SearchAndFilter(props: SearchAndFilterProps) {
+  return (
+    <Suspense fallback={
+      <div className="max-w-4xl mx-auto mb-8">
+        <div className="grid grid-cols-1 gap-4">
+          <div className="animate-pulse bg-gray-200 h-12 rounded-lg"></div>
+        </div>
+      </div>
+    }>
+      <SearchAndFilterContent {...props} />
+    </Suspense>
   );
 } 
