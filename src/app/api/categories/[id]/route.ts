@@ -9,7 +9,8 @@ export async function PUT(
 ) {
   try {
     // Verify authentication
-    const token = extractTokenFromHeader(request.headers.get('authorization'));
+    const authHeader = request.headers.get('authorization');
+    const token = extractTokenFromHeader(authHeader || undefined);
     if (!token) {
       return NextResponse.json(
         { error: 'غير مصرح لك' },
@@ -86,7 +87,8 @@ export async function DELETE(
 ) {
   try {
     // Verify authentication
-    const token = extractTokenFromHeader(request.headers.get('authorization'));
+    const authHeader = request.headers.get('authorization');
+    const token = extractTokenFromHeader(authHeader || undefined);
     if (!token) {
       return NextResponse.json(
         { error: 'غير مصرح لك' },
