@@ -5,11 +5,12 @@ import { verifyToken, extractTokenFromHeader } from '@/utils/auth';
 // GET - Get single product
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const product = await prisma.product.findUnique({
-      where: { id: params.id }
+      where: { id }
     });
 
     if (!product) {
@@ -32,7 +33,7 @@ export async function GET(
 // PUT - Update product (requires authentication)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify authentication
@@ -52,10 +53,11 @@ export async function PUT(
       );
     }
 
+    const { id } = await params;
     const { name, price, image, externalLink, features, isActive } = await request.json();
 
     const product = await prisma.product.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         name,
         price: parseFloat(price),
@@ -79,7 +81,7 @@ export async function PUT(
 // DELETE - Delete product (requires authentication)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify authentication
@@ -99,8 +101,9 @@ export async function DELETE(
       );
     }
 
+    const { id } = await params;
     await prisma.product.delete({
-      where: { id: params.id }
+      where: { id }
     });
 
     return NextResponse.json({ message: 'تم حذف المنتج بنجاح' });

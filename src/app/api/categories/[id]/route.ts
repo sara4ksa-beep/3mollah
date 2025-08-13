@@ -5,7 +5,7 @@ import { verifyToken, extractTokenFromHeader } from '@/utils/auth';
 // PUT - Update category
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify authentication
@@ -25,6 +25,14 @@ export async function PUT(
       );
     }
 
+    const { id } = await params;
+    if (!id || typeof id !== 'string') {
+      return NextResponse.json(
+        { error: 'معرف الفئة مطلوب' },
+        { status: 400 }
+      );
+    }
+
     const { name, slug, description, image, sortOrder, isActive } = await request.json();
 
     if (!name || !slug) {
@@ -38,7 +46,7 @@ export async function PUT(
     const existingCategory = await prisma.category.findFirst({
       where: {
         slug,
-        id: { not: params.id }
+        id: { not: id }
       }
     });
 
@@ -50,7 +58,7 @@ export async function PUT(
     }
 
     const category = await prisma.category.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         name,
         slug,
@@ -74,7 +82,7 @@ export async function PUT(
 // DELETE - Delete category
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify authentication
@@ -94,9 +102,17 @@ export async function DELETE(
       );
     }
 
+    const { id } = await params;
+    if (!id || typeof id !== 'string') {
+      return NextResponse.json(
+        { error: 'معرف الفئة مطلوب' },
+        { status: 400 }
+      );
+    }
+
     // Check if category has products
     const categoryWithProducts = await prisma.category.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         _count: {
           select: { products: true }
@@ -112,7 +128,7 @@ export async function DELETE(
     }
 
     await prisma.category.delete({
-      where: { id: params.id }
+      where: { id }
     });
 
     return NextResponse.json({ message: 'تم حذف الفئة بنجاح' });

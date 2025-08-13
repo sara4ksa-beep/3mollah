@@ -5,7 +5,7 @@ import { verifyToken, extractTokenFromHeader, hashPassword } from '@/utils/auth'
 // GET - Get specific user (admin only)
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify authentication
@@ -25,8 +25,16 @@ export async function GET(
       );
     }
 
+    const { id } = await params;
+    if (!id || typeof id !== 'string') {
+      return NextResponse.json(
+        { error: 'معرف المستخدم مطلوب' },
+        { status: 400 }
+      );
+    }
+
     const user = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: {
         id: true,
         email: true,
@@ -64,7 +72,7 @@ export async function GET(
 // PUT - Update user (admin only)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify authentication
@@ -84,11 +92,19 @@ export async function PUT(
       );
     }
 
+    const { id } = await params;
+    if (!id || typeof id !== 'string') {
+      return NextResponse.json(
+        { error: 'معرف المستخدم مطلوب' },
+        { status: 400 }
+      );
+    }
+
     const { name, email, password, role, isActive } = await request.json();
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
-      where: { id: params.id }
+      where: { id }
     });
 
     if (!existingUser) {
@@ -125,7 +141,7 @@ export async function PUT(
     }
 
     const updatedUser = await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       select: {
         id: true,
@@ -151,7 +167,7 @@ export async function PUT(
 // DELETE - Delete user (admin only)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify authentication
@@ -171,9 +187,17 @@ export async function DELETE(
       );
     }
 
+    const { id } = await params;
+    if (!id || typeof id !== 'string') {
+      return NextResponse.json(
+        { error: 'معرف المستخدم مطلوب' },
+        { status: 400 }
+      );
+    }
+
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
-      where: { id: params.id }
+      where: { id }
     });
 
     if (!existingUser) {
@@ -184,7 +208,7 @@ export async function DELETE(
     }
 
     // Prevent deleting own account
-    if (payload.id === params.id) {
+    if (payload.id === id) {
       return NextResponse.json(
         { error: 'لا يمكنك حذف حسابك الخاص' },
         { status: 400 }
@@ -193,7 +217,7 @@ export async function DELETE(
 
     // Check if user has products
     const userProducts = await prisma.product.findMany({
-      where: { createdById: params.id }
+      where: { createdById: id }
     });
 
     if (userProducts.length > 0) {
@@ -204,7 +228,7 @@ export async function DELETE(
     }
 
     await prisma.user.delete({
-      where: { id: params.id }
+      where: { id }
     });
 
     return NextResponse.json(

@@ -3,11 +3,19 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+    if (!id || typeof id !== 'string') {
+      return NextResponse.json(
+        { error: 'معرف المنتج مطلوب' },
+        { status: 400 }
+      );
+    }
+
     const product = await prisma.product.findUnique({
-      where: { id: params.id }
+      where: { id }
     });
 
     if (!product) {
@@ -27,7 +35,7 @@ export async function POST(
     // Record the click
     await prisma.productAnalytics.create({
       data: {
-        productId: params.id,
+        productId: id,
         ipAddress: ipAddress.toString(),
         userAgent,
         referrer
@@ -36,7 +44,7 @@ export async function POST(
 
     // Update product click count
     await prisma.product.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         clicks: {
           increment: 1
