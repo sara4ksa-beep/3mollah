@@ -77,23 +77,19 @@ export default function AdminLayout({
   // If we're on login page, render without sidebar
   if (isLoginPage) {
     return (
-      <html lang="ar" dir="rtl">
-        <body className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-white`} suppressHydrationWarning={true}>
-          {children}
-        </body>
-      </html>
+      <div className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-white`}>
+        {children}
+      </div>
     );
   }
 
   if (loading) {
     return (
-      <html lang="ar" dir="rtl">
-        <body className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-white`} suppressHydrationWarning={true}>
-          <div className="flex items-center justify-center h-screen">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-          </div>
-        </body>
-      </html>
+      <div className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-white`}>
+        <div className="flex items-center justify-center h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        </div>
+      </div>
     );
   }
 
@@ -102,22 +98,20 @@ export default function AdminLayout({
   }
 
   return (
-    <html lang="ar" dir="rtl">
-      <body className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-white`} suppressHydrationWarning={true}>
-        <div className="flex h-screen">
-          <AdminSidebar 
-            userRole={user.role}
-            userName={user.name}
-            onLogout={handleLogout}
-          />
-          {/* Main Content - Responsive margin */}
-          <div className="flex-1 overflow-auto lg:mr-64">
-            <div className="p-4 lg:p-8">
-              {children}
-            </div>
+    <div className={`${cairo.variable} ${inter.variable} ${poppins.variable} font-cairo font-smooth text-arabic-optimized min-h-screen bg-white`}>
+      <div className="flex h-screen">
+        <AdminSidebar 
+          userRole={user.role}
+          userName={user.name}
+          onLogout={handleLogout}
+        />
+        {/* Main Content - Responsive margin */}
+        <div className="flex-1 overflow-auto lg:mr-64">
+          <div className="p-4 lg:p-8">
+            {children}
           </div>
         </div>
-      </body>
-    </html>
+      </div>
+    </div>
   );
 } 

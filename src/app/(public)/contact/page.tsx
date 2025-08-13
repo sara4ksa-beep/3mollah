@@ -278,7 +278,7 @@ export default function ContactPage() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="flex justify-center items-center space-x-8 space-x-reverse flex-wrap"
+            className="flex justify-center items-center gap-16 flex-wrap"
           >
             {socialMediaLinks.map((social, index) => (
               <motion.a

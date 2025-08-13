@@ -289,6 +289,42 @@ export default function ProductsPage() {
     window.location.href = '/admin/login';
   };
 
+  const handleDeleteAll = async () => {
+    if (!confirm('هل أنت متأكد من حذف جميع المنتجات؟ هذا الإجراء لا يمكن التراجع عنه!')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      // Delete all products
+      const response = await fetch('/api/products/delete-all', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        alert('تم حذف جميع المنتجات بنجاح');
+        setProducts([]);
+        setShowAddForm(false);
+        setEditingProduct(null);
+      } else {
+        const error = await response.json();
+        alert(`فشل في حذف المنتجات: ${error.error}`);
+      }
+    } catch (error) {
+      console.error('Error deleting all products:', error);
+      alert('حدث خطأ أثناء حذف المنتجات');
+    }
+  };
+
   const filteredProducts = Array.isArray(products) ? products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.description?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -330,13 +366,22 @@ export default function ProductsPage() {
               <h1 className="text-2xl font-bold text-gray-800 text-heading">إدارة المنتجات</h1>
             </div>
             
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
-            >
-              <Plus className="h-4 w-4" />
-              إضافة منتج
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowAddForm(true)}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
+              >
+                <Plus className="h-4 w-4" />
+                إضافة منتج
+              </button>
+              <button
+                onClick={handleDeleteAll}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-red-700"
+              >
+                <Trash2 className="h-4 w-4" />
+                حذف جميع المنتجات
+              </button>
+            </div>
           </div>
 
           {/* Filters */}
@@ -618,7 +663,6 @@ export default function ProductsPage() {
                                 price: product.price,
                                 originalPrice: product.originalPrice || 0,
                                 image: product.image || '',
-                                affiliateUrl: product.affiliateUrl,
                                 categoryId: product.category?.id || '',
                                 isActive: product.isActive
                               });
