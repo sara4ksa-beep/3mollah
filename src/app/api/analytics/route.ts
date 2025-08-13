@@ -26,23 +26,87 @@ export async function GET(request: NextRequest) {
 
     // Get recent analytics
     const recentAnalytics = await prisma.productAnalytics.findMany({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { clickedAt: 'desc' },
       take: 10,
       include: {
         product: {
           select: {
-            name: true
+            name: true,
+            category: {
+              select: {
+                name: true
+              }
+            }
           }
         }
       }
     });
 
+    // Get category stats
+    const categoryStats = await prisma.category.findMany({
+      where: { isActive: true },
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            products: true
+          }
+        }
+      }
+    });
+
+    // Calculate total clicks for each category
+    const categoryStatsWithClicks = await Promise.all(
+      categoryStats.map(async (category) => {
+        const totalClicks = await prisma.productAnalytics.count({
+          where: {
+            product: {
+              categoryId: category.id
+            }
+          }
+        });
+        return {
+          ...category,
+          totalClicks
+        };
+      })
+    );
+
+    // Get daily stats for the last 7 days
+    const dailyStats = [];
+    const today = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const startOfDay = new Date(date.setHours(0, 0, 0, 0));
+      const endOfDay = new Date(date.setHours(23, 59, 59, 999));
+      
+      const clicks = await prisma.productAnalytics.count({
+        where: {
+          clickedAt: {
+            gte: startOfDay,
+            lte: endOfDay
+          }
+        }
+      });
+      
+      dailyStats.push({
+        date: startOfDay.toISOString().split('T')[0],
+        clicks
+      });
+    }
+
     return NextResponse.json({
-      totalProducts,
-      totalClicks,
-      totalCategories,
+      summary: {
+        totalProducts,
+        totalClicks,
+        totalCategories
+      },
       topProducts,
-      recentAnalytics
+      categoryStats: categoryStatsWithClicks,
+      dailyStats,
+      recentClicks: recentAnalytics
     });
   } catch (error) {
     console.error('Error fetching analytics:', error);

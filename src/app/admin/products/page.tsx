@@ -52,8 +52,8 @@ export default function ProductsPage() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    price: 0,
-    originalPrice: 0,
+    price: '',
+    originalPrice: '',
     image: '',
     categoryId: '',
     isActive: true
@@ -64,6 +64,16 @@ export default function ProductsPage() {
     fetchProducts();
     fetchCategories();
   }, []);
+
+  // Debug: Monitor formData changes
+  useEffect(() => {
+    console.log('formData changed:', formData);
+    console.log('formData.name:', formData.name);
+    console.log('formData.price:', formData.price);
+    console.log('formData.originalPrice:', formData.originalPrice);
+    console.log('formData.categoryId:', formData.categoryId);
+    console.log('formData.image:', formData.image);
+  }, [formData]);
 
   const checkAuth = () => {
     const token = localStorage.getItem('adminToken');
@@ -166,8 +176,8 @@ export default function ProductsPage() {
         setFormData({
           name: '',
           description: '',
-          price: 0,
-          originalPrice: 0,
+          price: '',
+          originalPrice: '',
           image: '',
           categoryId: '',
           isActive: true
@@ -219,8 +229,8 @@ export default function ProductsPage() {
         setFormData({
           name: '',
           description: '',
-          price: 0,
-          originalPrice: 0,
+          price: '',
+          originalPrice: '',
           image: '',
           categoryId: '',
           isActive: true
@@ -431,7 +441,10 @@ export default function ProductsPage() {
                     <input
                       type="text"
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      onChange={(e) => {
+                        console.log('Name changed to:', e.target.value);
+                        setFormData({ ...formData, name: e.target.value });
+                      }}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="أدخل اسم المنتج"
                       required
@@ -465,7 +478,7 @@ export default function ProductsPage() {
                       step="0.01"
                       min="0"
                       value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="0.00"
                       required
@@ -479,7 +492,7 @@ export default function ProductsPage() {
                       step="0.01"
                       min="0"
                       value={formData.originalPrice}
-                      onChange={(e) => setFormData({ ...formData, originalPrice: parseFloat(e.target.value) || 0 })}
+                      onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="0.00"
                     />
@@ -492,11 +505,17 @@ export default function ProductsPage() {
                   <ImageUpload
                     onUpload={(publicId) => {
                       console.log('Image uploaded, setting publicId:', publicId);
-                      setFormData({ ...formData, image: publicId });
+                      console.log('Current formData before update:', formData);
+                      const newFormData = { ...formData, image: publicId };
+                      console.log('New formData after update:', newFormData);
+                      setFormData(newFormData);
                     }}
                     onRemove={() => {
                       console.log('Image removed');
-                      setFormData({ ...formData, image: '' });
+                      console.log('Current formData before remove:', formData);
+                      const newFormData = { ...formData, image: '' };
+                      console.log('New formData after remove:', newFormData);
+                      setFormData(newFormData);
                     }}
                     currentImage={formData.image}
                     className="w-full"
@@ -553,8 +572,8 @@ export default function ProductsPage() {
                       setFormData({
                         name: '',
                         description: '',
-                        price: 0,
-                        originalPrice: 0,
+                        price: '',
+                        originalPrice: '',
                         image: '',
                         categoryId: '',
                         isActive: true
@@ -571,8 +590,8 @@ export default function ProductsPage() {
                       const testData = {
                         name: 'منتج تجريبي',
                         description: 'وصف تجريبي للمنتج',
-                        price: 99.99,
-                        originalPrice: 149.99,
+                        price: '99.99',
+                        originalPrice: '149.99',
                         image: '',
                         categoryId: categories.length > 0 ? categories[0].id : '',
                         isActive: true
@@ -660,8 +679,8 @@ export default function ProductsPage() {
                               setFormData({
                                 name: product.name,
                                 description: product.description || '',
-                                price: product.price,
-                                originalPrice: product.originalPrice || 0,
+                                price: product.price.toString(),
+                                originalPrice: product.originalPrice ? product.originalPrice.toString() : '',
                                 image: product.image || '',
                                 categoryId: product.category?.id || '',
                                 isActive: product.isActive
