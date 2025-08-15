@@ -375,12 +375,6 @@ export default function ContactPage() {
                 )}
               </motion.button>
             </form>
-            
-            <div className="mt-4 text-center">
-              <p className="text-sm text-gray-500">
-                سيتم إرسال رسالتك إلى: <span className="font-semibold text-blue-600">abrajsa@gmail.com</span>
-              </p>
-            </div>
           </motion.div>
         </motion.div>
 
@@ -438,7 +432,7 @@ export default function ContactPage() {
             ابدأ رحلتك في عالم التجارة الإلكترونية مع متجر عمولة مخصص لك
           </motion.p>
           <motion.a
-            href="https://abrajsa.com"
+            href="https://abrajsa.com/request-service"
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
