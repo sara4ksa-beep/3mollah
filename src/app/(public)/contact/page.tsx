@@ -9,6 +9,7 @@ import {
   faTiktok, 
   faYoutube 
 } from '@fortawesome/free-brands-svg-icons';
+import { useState } from 'react';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -50,7 +51,7 @@ const socialIconVariants = {
     rotate: 0,
     transition: {
       duration: 0.5,
-      type: "spring",
+      type: "spring" as const,
       stiffness: 200
     }
   },
@@ -59,7 +60,7 @@ const socialIconVariants = {
     rotate: 5,
     transition: {
       duration: 0.2,
-      type: "spring",
+      type: "spring" as const,
       stiffness: 300
     }
   }
@@ -78,6 +79,70 @@ const pageTransition = {
 };
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus({
+          type: 'success',
+          message: result.message || 'تم إرسال رسالتك بنجاح!'
+        });
+        
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          message: ''
+        });
+      } else {
+        setSubmitStatus({
+          type: 'error',
+          message: result.error || 'حدث خطأ أثناء إرسال الرسالة'
+        });
+      }
+    } catch (error) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const socialMediaLinks = [
     {
       name: 'فيسبوك',
@@ -167,7 +232,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">الهاتف</h3>
-                <p className="text-gray-600">+966 50 123 4567</p>
+                <p className="text-gray-600">0551781111</p>
               </div>
             </motion.div>
 
@@ -183,7 +248,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">البريد الإلكتروني</h3>
-                <p className="text-gray-600">info@example.com</p>
+                <p className="text-gray-600">info@abrajsa.com</p>
               </div>
             </motion.div>
 
@@ -200,7 +265,11 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">العنوان</h3>
-                <p className="text-gray-600">الرياض، المملكة العربية السعودية</p>
+                <p className="text-gray-600 leading-relaxed">
+                  برج طريق الملك - طريق الملك عبدالعزيز<br />
+                  جدة - حي الشاطئ<br />
+                  المملكة العربية السعودية
+                </p>
               </div>
             </motion.div>
           </motion.div>
@@ -208,7 +277,23 @@ export default function ContactPage() {
           {/* Contact Form */}
           <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-xl p-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-6">أرسل لنا رسالة</h3>
-            <form className="space-y-6">
+            
+            {/* Status Messages */}
+            {submitStatus.type && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`mb-6 p-4 rounded-lg ${
+                  submitStatus.type === 'success' 
+                    ? 'bg-green-100 text-green-800 border border-green-200' 
+                    : 'bg-red-100 text-red-800 border border-red-200'
+                }`}
+              >
+                {submitStatus.message}
+              </motion.div>
+            )}
+            
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <motion.div
                 whileFocus={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
@@ -219,7 +304,12 @@ export default function ContactPage() {
                 <input
                   type="text"
                   id="name"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="أدخل اسمك"
                 />
               </motion.div>
@@ -234,7 +324,12 @@ export default function ContactPage() {
                 <input
                   type="email"
                   id="email"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="أدخل بريدك الإلكتروني"
                 />
               </motion.div>
@@ -248,21 +343,44 @@ export default function ContactPage() {
                 </label>
                 <textarea
                   id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  required
+                  disabled={isSubmitting}
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="اكتب رسالتك هنا..."
                 />
               </motion.div>
 
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
+                whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
                 type="submit"
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-lg hover:shadow-xl"
+                disabled={isSubmitting}
+                className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 shadow-lg ${
+                  isSubmitting
+                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                    : 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-xl'
+                }`}
               >
-                إرسال الرسالة
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    جاري الإرسال...
+                  </div>
+                ) : (
+                  'إرسال الرسالة'
+                )}
               </motion.button>
             </form>
+            
+            <div className="mt-4 text-center">
+              <p className="text-sm text-gray-500">
+                سيتم إرسال رسالتك إلى: <span className="font-semibold text-blue-600">abrajsa@gmail.com</span>
+              </p>
+            </div>
           </motion.div>
         </motion.div>
 

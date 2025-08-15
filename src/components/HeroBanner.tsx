@@ -28,7 +28,7 @@ export default function HeroBanner() {
       subtitle: "المورد يتكفّل بالشحن و التخزين وأنت تربح من تسويق متجرك",
       gradient: "from-black/40 via-black/30 to-black/40",
       buttons: [
-        { text: "ابدأ الربح الآن", href: "/products", style: "bg-white text-blue-600 hover:bg-gray-100" },
+        { text: "ابدأ الربح الآن", href: "https://abrajsa.com/request-service", style: "bg-white text-blue-600 hover:bg-gray-100" },
         { text: "تواصل معنا", href: "/contact", style: "border-2 border-white text-white hover:bg-white hover:text-blue-600" }
       ]
     }
