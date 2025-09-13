@@ -1,71 +1,106 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// GET - Search products
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const search = searchParams.get('search');
-    const category = searchParams.get('category');
+    const q = searchParams.get('q') || '';
+    const category = searchParams.get('category') || '';
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '12');
-    const sortBy = searchParams.get('sortBy') || 'createdAt';
-    const sortOrder = searchParams.get('sortOrder') || 'desc';
-
-    const skip = (page - 1) * limit;
+    const sort = searchParams.get('sort') || 'newest';
 
     // Build where clause
-    const where: any = { isActive: true };
+    const where: any = {
+      isActive: true,
+    };
 
-    if (search) {
+    // Search term
+    if (q) {
       where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } }
+        { name: { contains: q, mode: 'insensitive' } },
+        { description: { contains: q, mode: 'insensitive' } },
       ];
     }
 
+    // Category filter
     if (category) {
       where.categoryId = category;
     }
 
+    // Price range filter
     if (minPrice || maxPrice) {
       where.price = {};
-      if (minPrice) where.price.gte = parseFloat(minPrice);
-      if (maxPrice) where.price.lte = parseFloat(maxPrice);
+      if (minPrice) {
+        where.price.gte = parseFloat(minPrice);
+      }
+      if (maxPrice) {
+        where.price.lte = parseFloat(maxPrice);
+      }
     }
 
-    // Fetch products with pagination
-    const [products, total] = await Promise.all([
-      prisma.product.findMany({
-        where,
-        orderBy: { [sortBy]: sortOrder },
-        skip,
-        take: limit,
-        include: {
-          category: {
-            select: { id: true, name: true, slug: true }
-          }
-        }
-      }),
-      prisma.product.count({ where })
-    ]);
+    // Build order by clause
+    let orderBy: any = {};
+    switch (sort) {
+      case 'newest':
+        orderBy = { createdAt: 'desc' };
+        break;
+      case 'oldest':
+        orderBy = { createdAt: 'asc' };
+        break;
+      case 'price-low':
+        orderBy = { price: 'asc' };
+        break;
+      case 'price-high':
+        orderBy = { price: 'desc' };
+        break;
+      case 'name':
+        orderBy = { name: 'asc' };
+        break;
+      case 'rating':
+        orderBy = { rating: 'desc' };
+        break;
+      default:
+        orderBy = { createdAt: 'desc' };
+    }
 
-    const totalPages = Math.ceil(total / limit);
-
-    return NextResponse.json({
-      hits: products,
-      total,
-      page,
-      totalPages,
-      hasNextPage: page < totalPages,
-      hasPrevPage: page > 1
+    // Fetch products
+    const products = await prisma.product.findMany({
+      where,
+      orderBy,
+      take: 20, // Limit results
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        images: {
+          take: 1,
+          select: {
+            url: true,
+          },
+        },
+      },
     });
+
+    // Format products for response
+    const formattedProducts = products.map((product) => ({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images[0]?.url || '/placeholder-product.jpg',
+      category: product.category,
+      rating: product.rating,
+      description: product.description,
+    }));
+
+    return NextResponse.json(formattedProducts);
+
   } catch (error) {
-    console.error('Error searching products:', error);
+    console.error('Search error:', error);
     return NextResponse.json(
-      { error: 'حدث خطأ في البحث' },
+      { error: 'حدث خطأ أثناء البحث' },
       { status: 500 }
     );
   }

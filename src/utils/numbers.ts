@@ -1,4 +1,4 @@
-// Utility functions for number formatting in Arabic
+// Utility functions for number formatting with English numerals
 
 /**
  * Formats price in Saudi Riyal with English numerals
@@ -6,7 +6,7 @@
  * @returns Formatted price string
  */
 export function formatPrice(price: number): string {
-  return price.toLocaleString('ar-SA');
+  return price.toLocaleString('en-US');
 }
 
 /**
@@ -26,5 +26,5 @@ export function formatPriceWithCurrency(price: number, currency: string = 'ري�
  * @returns Formatted number string
  */
 export function formatNumber(num: number): string {
-  return num.toLocaleString('ar-SA');
+  return num.toLocaleString('en-US');
 }

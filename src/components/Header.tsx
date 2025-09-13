@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { Mail, Home, Menu, X, Search, ChevronDown } from 'lucide-react';
+import { Mail, Home, Menu, Search, ChevronDown } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import AdvancedSearch from './AdvancedSearch';
 
 interface Category {
   id: string;
@@ -13,9 +14,13 @@ interface Category {
   };
 }
 
-export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+interface HeaderProps {
+  onToggleSidebar?: () => void;
+}
+
+export default function Header({ onToggleSidebar }: HeaderProps) {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -40,12 +45,13 @@ export default function Header() {
     }
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+
+  const toggleSearch = () => {
+    setIsSearchOpen(!isSearchOpen);
   };
 
-  const closeMenu = () => {
-    setIsMenuOpen(false);
+  const closeSearch = () => {
+    setIsSearchOpen(false);
   };
 
   const toggleCategories = () => {
@@ -55,15 +61,28 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link href="/" className="text-xl md:text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors text-heading">
-              متجر العمولة
-            </Link>
-          </div>
+    <>
+      <header className="bg-white shadow-md sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            {/* Sidebar Toggle Button - Only on mobile, positioned on the left */}
+            <button
+              onClick={onToggleSidebar}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors order-1"
+              aria-label="فتح القائمة الجانبية"
+            >
+              <Menu size={24} className="text-gray-700" />
+            </button>
+
+            {/* Logo - Centered on mobile, left-aligned on desktop */}
+            <div className="flex items-center flex-1 justify-center lg:justify-start lg:flex-none">
+              <Link href="/" className="text-xl md:text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors text-heading">
+                متجر العمولة
+              </Link>
+            </div>
+
+            {/* Spacer for mobile to maintain centering */}
+            <div className="lg:hidden w-10"></div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center">
@@ -101,13 +120,13 @@ export default function Header() {
             )}
 
             {/* Search Button */}
-            <Link 
-              href="/products" 
+            <button
+              onClick={toggleSearch}
               className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors ml-6"
             >
-              <span className="font-bold">بحث</span>
+              <span className="font-bold">بحث متقدم</span>
               <Search size={18} />
-            </Link>
+            </button>
             
             <Link 
               href="/contact" 
@@ -126,73 +145,8 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={toggleMenu}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? (
-              <X size={24} className="text-gray-700" />
-            ) : (
-              <Menu size={24} className="text-gray-700" />
-            )}
-          </button>
         </div>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-gray-200">
-            <nav className="flex flex-col space-y-3 pt-4">
-              {/* Mobile Categories */}
-              {categories.length > 0 && (
-                <div className="space-y-2">
-                  <div className="px-4 py-2 text-sm font-bold text-gray-600">الفئات:</div>
-                  {categories.map((category) => (
-                    <Link
-                      key={category.id}
-                      href={`/products?category=${category.id}`}
-                      onClick={closeMenu}
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors text-right"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span>{category.name}</span>
-                        <span className="text-xs text-gray-500">({category._count.products})</span>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-              
-              <Link 
-                href="/products" 
-                onClick={closeMenu}
-                className="flex items-center gap-3 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-              >
-                <Search size={20} />
-                <span className="font-bold">بحث</span>
-              </Link>
-              
-              <Link 
-                href="/" 
-                onClick={closeMenu}
-                className="flex items-center gap-3 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-              >
-                <Home size={20} />
-                <span className="font-bold">الرئيسية</span>
-              </Link>
-              
-              <Link 
-                href="/contact" 
-                onClick={closeMenu}
-                className="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <Mail size={20} />
-                <span className="font-bold">اتصل بنا</span>
-              </Link>
-            </nav>
-          </div>
-        )}
       </div>
       
       {/* Overlay for closing dropdown */}
@@ -202,6 +156,10 @@ export default function Header() {
           onClick={() => setIsCategoriesOpen(false)}
         />
       )}
-    </header>
+      </header>
+
+      {/* Advanced Search */}
+      <AdvancedSearch isOpen={isSearchOpen} onClose={closeSearch} />
+    </>
   );
 } 

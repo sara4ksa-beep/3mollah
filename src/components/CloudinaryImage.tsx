@@ -170,15 +170,52 @@ export default function CloudinaryImage({
 
 // Optimized image component for product cards
 export function ProductImage({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
+  const [imageError, setImageError] = useState(false);
+  
   // If no src or empty src, return placeholder
   if (!src || src.trim() === '') {
     return (
-      <div className={`bg-gray-200 flex items-center justify-center rounded-lg ${className}`} style={{ width: 300, height: 300 }}>
+      <div className={`bg-gray-200 flex items-center justify-center rounded-lg ${className}`} style={{ width: '100%', height: '100%' }}>
         <span className="text-gray-500 text-sm">لا توجد صورة</span>
       </div>
     );
   }
 
+  // If image failed to load, show placeholder
+  if (imageError) {
+    return (
+      <div className={`bg-gray-200 flex items-center justify-center rounded-lg ${className}`} style={{ width: '100%', height: '100%' }}>
+        <span className="text-gray-500 text-sm">فشل في تحميل الصورة</span>
+      </div>
+    );
+  }
+
+  // For external URLs (like Unsplash), use regular img tag
+  if (src.includes('unsplash.com') || src.includes('http')) {
+    return (
+      <div className={`relative ${className}`} style={{ width: '100%', height: '100%' }}>
+        <img
+          src={src}
+          alt={alt}
+          className="w-full h-full object-cover rounded-lg"
+          style={{ 
+            display: 'block',
+            maxWidth: '100%',
+            height: 'auto'
+          }}
+          onError={(e) => {
+            console.error('Image load error:', e);
+            setImageError(true);
+          }}
+          onLoad={() => {
+            console.log('Image loaded successfully:', src);
+          }}
+        />
+      </div>
+    );
+  }
+
+  // For Cloudinary images, use CloudinaryImage
   return (
     <CloudinaryImage
       src={src}

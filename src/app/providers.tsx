@@ -2,11 +2,14 @@
 
 import { SWRConfig } from 'swr';
 import { swrConfig } from '@/lib/swr';
+import { NotificationProvider } from '@/contexts/NotificationContext';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SWRConfig value={swrConfig}>
-      {children}
+      <NotificationProvider>
+        {children}
+      </NotificationProvider>
     </SWRConfig>
   );
 }
