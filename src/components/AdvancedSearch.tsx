@@ -285,3 +285,4 @@ export default function AdvancedSearch({ onClose, isOpen = false }: AdvancedSear
     </div>
   );
 }
+

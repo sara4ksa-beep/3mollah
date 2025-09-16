@@ -65,27 +65,24 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
       <header className="bg-white shadow-md sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            {/* Sidebar Toggle Button - Only on mobile, positioned on the left */}
-            <button
-              onClick={onToggleSidebar}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors order-1"
-              aria-label="فتح القائمة الجانبية"
-            >
-              <Menu size={24} className="text-gray-700" />
-            </button>
-
-            {/* Logo - Centered on mobile, left-aligned on desktop */}
-            <div className="flex items-center flex-1 justify-center lg:justify-start lg:flex-none">
+            {/* Logo - Left-aligned on mobile, left-aligned on desktop */}
+            <div className="flex items-center flex-1 justify-start lg:justify-start lg:flex-none order-1">
               <Link href="/" className="text-xl md:text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors text-heading">
                 متجر العمولة
               </Link>
             </div>
 
-            {/* Spacer for mobile to maintain centering */}
-            <div className="lg:hidden w-10"></div>
+            {/* Sidebar Toggle Button - Only on mobile, positioned on the right */}
+            <button
+              onClick={onToggleSidebar}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors order-2"
+              aria-label="فتح القائمة الجانبية"
+            >
+              <Menu size={24} className="text-gray-700" />
+            </button>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center">
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center order-3">
             {/* Categories Dropdown */}
             {categories.length > 0 && (
               <div className="relative ml-6">

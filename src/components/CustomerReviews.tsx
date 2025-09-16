@@ -1,6 +1,6 @@
 'use client';
 
-import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, Quote } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -72,18 +72,6 @@ const reviews: Review[] = [
 export default function CustomerReviews() {
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
 
-  const handlePrev = () => {
-    if (swiper && swiper.slidePrev) {
-      swiper.slidePrev();
-    }
-  };
-
-  const handleNext = () => {
-    if (swiper && swiper.slideNext) {
-      swiper.slideNext();
-    }
-  };
-
   return (
     <section className="py-8 sm:py-12 lg:py-16 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,22 +87,6 @@ export default function CustomerReviews() {
 
         {/* Reviews Slider */}
         <div className="relative">
-          {/* Custom Navigation Buttons */}
-          <button
-            onClick={handlePrev}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white border border-gray-200 rounded-full p-2 sm:p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gray-50"
-            aria-label="السابق"
-          >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
-          </button>
-          
-          <button
-            onClick={handleNext}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white border border-gray-200 rounded-full p-2 sm:p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gray-50"
-            aria-label="التالي"
-          >
-            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
-          </button>
 
           <Swiper
             onSwiper={setSwiper}

@@ -42,7 +42,7 @@ export default function StoreSidebar({ isOpen, onClose }: StoreSidebarProps) {
   const pathname = usePathname();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['categories']));
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set([]));
 
   useEffect(() => {
     fetchCategories();
@@ -140,14 +140,6 @@ export default function StoreSidebar({ isOpen, onClose }: StoreSidebarProps) {
 
   return (
     <>
-      {/* Overlay - Only on mobile */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={onClose}
-        />
-      )}
-
       {/* Sidebar */}
       <div className={`
         fixed right-0 top-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out
