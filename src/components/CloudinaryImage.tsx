@@ -190,28 +190,28 @@ export function ProductImage({ src, alt, className = '' }: { src: string; alt: s
     );
   }
 
-  // For external URLs (like Unsplash), use regular img tag
+  // For external URLs (like Unsplash), use simple img tag
   if (src.includes('unsplash.com') || src.includes('http')) {
+    console.log('Loading external image:', src);
     return (
-      <div className={`relative ${className}`} style={{ width: '100%', height: '100%' }}>
-        <img
-          src={src}
-          alt={alt}
-          className="w-full h-full object-cover rounded-lg"
-          style={{ 
-            display: 'block',
-            maxWidth: '100%',
-            height: 'auto'
-          }}
-          onError={(e) => {
-            console.error('Image load error:', e);
-            setImageError(true);
-          }}
-          onLoad={() => {
-            console.log('Image loaded successfully:', src);
-          }}
-        />
-      </div>
+      <img
+        src={src}
+        alt={alt}
+        className={`w-full h-full object-cover rounded-lg ${className}`}
+        style={{ 
+          display: 'block',
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover'
+        }}
+        onError={(e) => {
+          console.error('Image load error for:', src, e);
+          setImageError(true);
+        }}
+        onLoad={() => {
+          console.log('Image loaded successfully:', src);
+        }}
+      />
     );
   }
 
