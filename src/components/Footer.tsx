@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { 
   Facebook, 
   Instagram, 
@@ -185,6 +186,10 @@ export default function Footer() {
               جميع الحقوق محفوظة &copy; {currentYear} متجر العمولة. جميع الحقوق محفوظة.
             </p>
             <div className="flex items-center gap-4 text-xs text-gray-400">
+              <Link href="/contact" className="hover:text-white transition-colors text-blue-300 font-medium">
+                راسلنا لأي ملاحظة
+              </Link>
+              <span>•</span>
               <a href="/privacy" className="hover:text-white transition-colors">سياسة الخصوصية</a>
               <span>•</span>
               <a href="/terms" className="hover:text-white transition-colors">شروط الاستخدام</a>
