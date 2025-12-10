@@ -2,7 +2,7 @@
 
 import { CldImage } from 'next-cloudinary';
 import Image from 'next/image';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 
 
@@ -100,12 +100,11 @@ export default function CloudinaryImage({
   }
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative bg-gradient-to-br from-gray-50 to-gray-100 ${className}`} style={{ width, height }}>
       {/* Loading skeleton */}
       {isLoading && (
         <div 
-          className="absolute inset-0 bg-gray-200 animate-pulse rounded"
-          style={{ width, height }}
+          className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 animate-pulse rounded z-10"
         />
       )}
       
@@ -171,11 +170,12 @@ export default function CloudinaryImage({
 // Optimized image component for product cards
 export function ProductImage({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
   const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   
   // If no src or empty src, return placeholder
   if (!src || src.trim() === '') {
     return (
-      <div className={`bg-gray-200 flex items-center justify-center rounded-lg ${className}`} style={{ width: '100%', height: '100%' }}>
+      <div className={`bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center rounded-lg ${className}`} style={{ width: '100%', height: '100%' }}>
         <span className="text-gray-500 text-sm">لا توجد صورة</span>
       </div>
     );
@@ -184,16 +184,94 @@ export function ProductImage({ src, alt, className = '' }: { src: string; alt: s
   // If image failed to load, show placeholder
   if (imageError) {
     return (
-      <div className={`bg-gray-200 flex items-center justify-center rounded-lg ${className}`} style={{ width: '100%', height: '100%' }}>
+      <div className={`bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center rounded-lg ${className}`} style={{ width: '100%', height: '100%' }}>
         <span className="text-gray-500 text-sm">فشل في تحميل الصورة</span>
       </div>
     );
   }
 
-  // For external URLs (like Unsplash), use simple img tag
-  if (src.includes('unsplash.com') || src.includes('http')) {
-    console.log('Loading external image:', src);
+  // Check if it's a Cloudinary public ID
+  const isCloudinaryPublicId = (url: string) => {
+    return /^[a-zA-Z0-9_\/-]+$/.test(url) && !url.includes('http') && !url.includes('cloudinary.com');
+  };
+
+  // Check if it's a full Cloudinary URL
+  const isCloudinaryUrl = (url: string) => {
+    return url.includes('res.cloudinary.com');
+  };
+
+  // For external URLs (like Unsplash), use simple img tag with proper background
+  if ((src.includes('unsplash.com') || src.includes('http')) && !isCloudinaryUrl(src)) {
     return (
+      <div className="relative w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg overflow-hidden">
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 animate-pulse z-0" />
+        )}
+        <img
+          src={src}
+          alt={alt}
+          className={`w-full h-full object-cover rounded-lg ${className}`}
+          style={{ 
+            display: 'block',
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            position: 'relative',
+            zIndex: 1
+          }}
+          onError={(e) => {
+            console.error('Image load error for:', src, e);
+            setImageError(true);
+          }}
+          onLoad={() => {
+            console.log('Image loaded successfully:', src);
+            setImageLoaded(true);
+          }}
+        />
+      </div>
+    );
+  }
+
+  // For Cloudinary public IDs, construct URL and use regular img tag for immediate loading
+  if (isCloudinaryPublicId(src)) {
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dulvp7ipq';
+    const cloudinaryUrl = `https://res.cloudinary.com/${cloudName}/image/upload/c_fill,w_400,h_400,q_85/${src}`;
+    
+    return (
+      <div className="relative w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg overflow-hidden">
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 animate-pulse z-0" />
+        )}
+        <img
+          src={cloudinaryUrl}
+          alt={alt}
+          className={`w-full h-full object-cover rounded-lg ${className}`}
+          style={{ 
+            display: 'block',
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            position: 'relative',
+            zIndex: 1
+          }}
+          loading="eager"
+          onLoad={() => {
+            setImageLoaded(true);
+          }}
+          onError={() => {
+            setImageError(true);
+          }}
+        />
+      </div>
+    );
+  }
+
+  // For full Cloudinary URLs or other images, use regular img tag for immediate loading
+  return (
+    <div className="relative w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg overflow-hidden">
+      {!imageLoaded && (
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 animate-pulse z-0" />
+      )}
       <img
         src={src}
         alt={alt}
@@ -202,31 +280,19 @@ export function ProductImage({ src, alt, className = '' }: { src: string; alt: s
           display: 'block',
           width: '100%',
           height: '100%',
-          objectFit: 'cover'
+          objectFit: 'cover',
+          position: 'relative',
+          zIndex: 1
         }}
-        onError={(e) => {
-          console.error('Image load error for:', src, e);
+        loading="eager"
+        onLoad={() => {
+          setImageLoaded(true);
+        }}
+        onError={() => {
           setImageError(true);
         }}
-        onLoad={() => {
-          console.log('Image loaded successfully:', src);
-        }}
       />
-    );
-  }
-
-  // For Cloudinary images, use CloudinaryImage
-  return (
-    <CloudinaryImage
-      src={src}
-      alt={alt}
-      width={300}
-      height={300}
-      className={`object-cover rounded-lg ${className}`}
-      crop="fill"
-      quality={85}
-      placeholder="empty"
-    />
+    </div>
   );
 }
 

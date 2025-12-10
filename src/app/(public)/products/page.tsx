@@ -117,7 +117,7 @@ export default function ProductsPage() {
       exit="out"
       variants={pageVariants}
       transition={pageTransition}
-      className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8"
+      className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/50 py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8"
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -125,13 +125,16 @@ export default function ProductsPage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
         >
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            منتجاتنا
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            اكتشف مجموعة متنوعة من المنتجات عالية الجودة
+          <div className="inline-block mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4 text-heading">
+              منتجاتنا
+            </h1>
+            <div className="h-1 w-24 bg-gradient-to-r from-blue-600 to-indigo-600 mx-auto rounded-full"></div>
+          </div>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto text-body">
+            اكتشف مجموعة متنوعة من المنتجات عالية الجودة المختارة بعناية
           </p>
         </motion.div>
 
@@ -151,7 +154,7 @@ export default function ProductsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
           >
             {[...Array(8)].map((_, index) => (
               <motion.div
@@ -159,12 +162,14 @@ export default function ProductsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-lg shadow-md p-6 animate-pulse"
+                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-pulse"
               >
-                <div className="bg-gray-200 h-48 rounded-md mb-4"></div>
-                <div className="bg-gray-200 h-4 rounded mb-2"></div>
-                <div className="bg-gray-200 h-4 rounded mb-2 w-3/4"></div>
-                <div className="bg-gray-200 h-6 rounded w-1/2"></div>
+                <div className="bg-gradient-to-br from-gray-200 to-gray-300 h-52 sm:h-60"></div>
+                <div className="p-4 sm:p-6">
+                  <div className="bg-gray-200 h-5 rounded mb-3"></div>
+                  <div className="bg-gray-200 h-4 rounded mb-3 w-3/4"></div>
+                  <div className="bg-gradient-to-r from-blue-200 to-blue-300 h-6 rounded w-1/2"></div>
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -187,9 +192,10 @@ export default function ProductsPage() {
                   whileHover={{ 
                     y: -8,
                     scale: 1.02,
-                    transition: { duration: 0.2 }
+                    transition: { duration: 0.3, ease: "easeOut" }
                   }}
                   whileTap={{ scale: 0.98 }}
+                  className="h-full"
                 >
                   <ProductCard
                     id={product.id}
@@ -247,10 +253,10 @@ export default function ProductsPage() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => handlePageChange(pageNumber)}
-                  className={`px-4 py-2 text-sm font-medium rounded-md ${
+                  className={`px-4 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 ${
                     page === pageNumber
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30'
+                      : 'text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:shadow-md'
                   }`}
                 >
                   {pageNumber}
@@ -259,11 +265,11 @@ export default function ProductsPage() {
             })}
             
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, backgroundColor: '#f3f4f6' }}
               whileTap={{ scale: 0.95 }}
               onClick={() => handlePageChange(page + 1)}
               disabled={page === totalPages}
-              className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
             >
               التالي
             </motion.button>

@@ -414,3 +414,43 @@ select:disabled {
   color: #6b7280 !important;
   background-color: #f3f4f6 !important;
 }
+
+/* Shimmer Animation for Buttons */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
+}
+
+/* Fix Arabic font alignment in price section */
+.product-price {
+  font-variant-numeric: normal;
+  font-feature-settings: normal;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.2;
+  vertical-align: baseline;
+  display: inline-block;
+  font-family: var(--font-cairo), system-ui, -apple-system, sans-serif;
+}
+
+.product-price * {
+  vertical-align: baseline !important;
+  line-height: inherit !important;
+}
+
+/* Ensure consistent baseline for Arabic and numbers */
+.product-price {
+  font-kerning: normal;
+  font-variant-ligatures: none;
+  text-align: right;
+  direction: rtl;
+}
