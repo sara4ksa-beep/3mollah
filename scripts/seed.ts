@@ -8,6 +8,7 @@ async function main() {
 
   // Create users with different roles
   const hashedPassword = await hashPassword('admin123');
+  const adminHashedPassword = await hashPassword('Hash1233*');
   
   const superAdmin = await prisma.user.upsert({
     where: { email: 'superadmin@example.com' },
@@ -21,11 +22,11 @@ async function main() {
   });
 
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@example.com' },
-    update: {},
+    where: { email: 'hashbool@gmail.com' },
+    update: { password: adminHashedPassword },
     create: {
-      email: 'admin@example.com',
-      password: hashedPassword,
+      email: 'hashbool@gmail.com',
+      password: adminHashedPassword,
       name: 'مدير النظام',
       role: 'ADMIN'
     }
